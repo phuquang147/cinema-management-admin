@@ -50,11 +50,6 @@ const navConfig: INavConfig[] = [
     icon: getIcon("material-symbols:recent-actors-rounded"),
   },
   {
-    title: "Đạo diễn",
-    path: "/dao-dien",
-    icon: getIcon("iconoir:director-chair"),
-  },
-  {
     title: "Nhân viên",
     path: "/nhan-vien",
     icon: getIcon("mdi:user"),

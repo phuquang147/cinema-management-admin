@@ -4,9 +4,10 @@ import { Controller, useFormContext } from "react-hook-form";
 
 interface RHFAutocompleteProps {
   name: string;
-  options: Array<object>;
+  options: Array<object> | Array<string>;
   label: string;
-  other: any[];
+  getOptionLabel: (option: any) => string;
+  isOptionEqualToValue: (option: any, value: any) => boolean;
 }
 
 const RHFAutocomplete: React.FC<RHFAutocompleteProps> = ({

@@ -6,6 +6,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 interface RHFDatePickerProps {
   name: string;
+  label: string;
 }
 
 const RHFDatePicker: React.FC<RHFDatePickerProps> = ({ name, ...other }) => {

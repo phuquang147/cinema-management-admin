@@ -20,9 +20,9 @@ const FONT_PRIMARY = "Nunito, sans-serif";
 
 const typography = {
   fontFamily: FONT_PRIMARY,
-  fontWeightRegular: 700,
-  fontWeightMedium: 800,
-  fontWeightBold: 900,
+  fontWeightRegular: 600,
+  fontWeightMedium: 700,
+  fontWeightBold: 800,
   h1: {
     fontWeight: 800,
     lineHeight: 80 / 64,
