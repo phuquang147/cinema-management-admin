@@ -13,7 +13,7 @@ const staffs: IStaff[] = [...Array(10)].map((_, index) => ({
   gender: faker.helpers.arrayElement(GENDER),
   status: faker.helpers.arrayElement(STATUS),
   address: faker.address.street(),
-  birthdate: faker.date.birthdate(),
+  birthdate: faker.date.past(),
 }));
 
 export default staffs;

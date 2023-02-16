@@ -5,6 +5,10 @@ import Page404 from "~/pages/Page404";
 import Movies from "~/pages/Movies";
 import EditMovie from "~/pages/Movies/EditMovie";
 import NewMovie from "~/pages/Movies/NewMovie";
+// Diễn viên
+import Actors from "~/pages/Actors";
+import EditActor from "~/pages/Actors/EditActor";
+import NewActor from "~/pages/Actors/NewActor";
 // Nhân viên
 import Staffs from "~/pages/Staffs";
 import EditStaff from "~/pages/Staffs/EditStaff";
@@ -27,6 +31,19 @@ const CommonRoutes: RouteObject[] = [
   {
     path: "/phim/:id",
     element: <EditMovie />,
+  },
+  // Diễn viên
+  {
+    path: "/dien-vien",
+    element: <Actors />,
+  },
+  {
+    path: "/them-dien-vien",
+    element: <NewActor />,
+  },
+  {
+    path: "/dien-vien/:id",
+    element: <EditActor />,
   },
   //Nhân viên
   {
