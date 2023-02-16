@@ -8,12 +8,17 @@ interface RHFAutocompleteProps {
   label: string;
   getOptionLabel: (option: any) => string;
   isOptionEqualToValue: (option: any, value: any) => boolean;
+  multiple?: boolean;
+  disableClearable?: boolean;
+  [x: string]: any;
 }
 
 const RHFAutocomplete: React.FC<RHFAutocompleteProps> = ({
   name,
   options,
   label,
+  multiple = false,
+  disableClearable = false,
   ...other
 }) => {
   const { control } = useFormContext();
@@ -22,19 +27,32 @@ const RHFAutocomplete: React.FC<RHFAutocompleteProps> = ({
     <Controller
       name={name}
       control={control}
-      render={({ field }) => {
+      render={({ field, fieldState: { error } }) => {
         return (
           <Autocomplete
             {...field}
-            value={field.value || options[0]}
+            value={
+              field.value
+                ? multiple
+                  ? [...field.value]
+                  : field.value
+                : [options[0]]
+            }
             options={options}
             fullWidth
-            disableClearable={true}
+            multiple={multiple}
+            disableClearable={disableClearable}
             onChange={(e, value) => {
               field.onChange(value);
             }}
             renderInput={(params) => (
-              <TextField {...params} label={label} value={field.value} />
+              <TextField
+                {...params}
+                label={label}
+                value={field.value}
+                error={!!error}
+                helperText={error?.message}
+              />
             )}
             {...other}
           />

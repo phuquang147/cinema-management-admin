@@ -7,9 +7,15 @@ import { Controller, useFormContext } from "react-hook-form";
 interface RHFDatePickerProps {
   name: string;
   label: string;
+  inputFormat?: string;
+  [x: string]: any;
 }
 
-const RHFDatePicker: React.FC<RHFDatePickerProps> = ({ name, ...other }) => {
+const RHFDatePicker: React.FC<RHFDatePickerProps> = ({
+  name,
+  inputFormat = "DD/MM/YYYY",
+  ...other
+}) => {
   const { control } = useFormContext();
 
   return (
@@ -20,7 +26,7 @@ const RHFDatePicker: React.FC<RHFDatePickerProps> = ({ name, ...other }) => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DesktopDatePicker
             {...field}
-            inputFormat="DD/MM/YYYY"
+            inputFormat={inputFormat}
             value={field.value}
             renderInput={(params) => <TextField {...params} fullWidth />}
             {...other}

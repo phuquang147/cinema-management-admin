@@ -1,11 +1,12 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "~/redux/store";
 import ThemeProvider from "~/theme";
 import App from "./App";
-import "./index.css";
+import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 
 const container = document.getElementById("root")!;
