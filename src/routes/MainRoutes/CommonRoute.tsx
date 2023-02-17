@@ -13,6 +13,10 @@ import NewActor from "~/pages/Actors/NewActor";
 import Staffs from "~/pages/Staffs";
 import EditStaff from "~/pages/Staffs/EditStaff";
 import NewStaff from "~/pages/Staffs/NewStaff";
+// Bài viết
+import Posts from "~/pages/Posts";
+import EditPost from "~/pages/Posts/EditPost";
+import NewPost from "~/pages/Posts/NewPost";
 
 const CommonRoutes: RouteObject[] = [
   {
@@ -57,6 +61,19 @@ const CommonRoutes: RouteObject[] = [
   {
     path: "/nhan-vien/:id",
     element: <EditStaff />,
+  },
+  // Bài viết
+  {
+    path: "/bai-viet",
+    element: <Posts />,
+  },
+  {
+    path: "/them-bai-viet",
+    element: <NewPost />,
+  },
+  {
+    path: "/bai-viet/:id",
+    element: <EditPost />,
   },
   //
   {
