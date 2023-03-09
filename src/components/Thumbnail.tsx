@@ -6,21 +6,42 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import Iconify from "./Iconify";
+import ImageCropper from "./ImageCropper";
 
 interface ThumbnailProps {
   thumbnail: string;
   handleChangeThumbnail: (value: string) => void;
+  crop?: boolean;
 }
 
 const Thumbnail: React.FC<ThumbnailProps> = ({
   thumbnail,
   handleChangeThumbnail,
+  crop = false,
 }) => {
-  const uploadImage = (file: File | null) => {
+  const [showCrop, setShowCrop] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
+
+  const handleCloseCrop = () => {
+    setShowCrop(false);
+  };
+
+  const handleChangeImage = (e: any) => {
+    if (e.target && e.target.files && e.target.files.length > 0) {
+      if (crop) {
+        setSelectedFile(e.target.files[0]);
+        setShowCrop(true);
+      } else uploadImage(e.target.files[0]);
+    }
+  };
+
+  const uploadImage = (file: File) => {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
+
       // ImageServices.postImage(formData)
       //   .then((response) => {
       //     handleChangeThumbnail(response.data.link);
@@ -58,9 +79,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
               type="file"
               accept="image/png, image/gif, image/jpeg"
               hidden
-              onChange={(e) => {
-                uploadImage(e.target.files![0]);
-              }}
+              onChange={(e) => handleChangeImage(e)}
             />
           </Button>
         </Box>
@@ -85,6 +104,12 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
           </IconButton>
         </Box>
       )}
+      <ImageCropper
+        file={selectedFile}
+        open={showCrop}
+        onClose={handleCloseCrop}
+        setSelectedFile={setSelectedFile}
+      />
     </Grid>
   );
 };
