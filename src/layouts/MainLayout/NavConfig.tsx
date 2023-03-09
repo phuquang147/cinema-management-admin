@@ -7,7 +7,7 @@ const getIcon = (name: string) => (
 
 export interface INavConfig {
   title: string;
-  path: string;
+  path?: string;
   icon: ReactElement;
   info?: string;
   children?: { path: string; title: string }[];
@@ -40,8 +40,8 @@ const navConfig: INavConfig[] = [
     icon: getIcon("fluent:conference-room-16-regular"),
   },
   {
-    title: "Bắp nước",
-    path: "/bap-nuoc",
+    title: "Đồ ăn nhẹ",
+    path: "/do-an-nhe",
     icon: getIcon("ph:popcorn"),
   },
   {
@@ -63,6 +63,20 @@ const navConfig: INavConfig[] = [
     title: "Báo cáo",
     path: "/bao-cao",
     icon: getIcon("iconoir:stats-report"),
+  },
+  {
+    title: "Cài đặt chung",
+    icon: getIcon("ep:setting"),
+    children: [
+      {
+        title: "Thể loại phim",
+        path: "/the-loai-phim",
+      },
+      {
+        title: "Loại phòng chiếu",
+        path: "/loai-phong-chieu",
+      },
+    ],
   },
 ];
 

@@ -57,7 +57,7 @@ function NavItem({
   active,
 }: {
   item: INavConfig;
-  active: (path: string) => boolean;
+  active: (path: string | undefined) => boolean;
 }) {
   const theme = useTheme();
 
@@ -180,7 +180,8 @@ interface NavSectionProps {
 const NavSection: React.FC<NavSectionProps> = ({ navConfig, ...other }) => {
   const { pathname } = useLocation();
 
-  const match = (path: string) => {
+  const match = (path: string | undefined) => {
+    if (!path) return false;
     const pathFirstPart: string = path.split("/")[1];
     const pathnameFirstPart = pathname.split("/")[1];
     return pathFirstPart === pathnameFirstPart;
