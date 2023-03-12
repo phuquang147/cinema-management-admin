@@ -1,24 +1,33 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import FormProvider from "~/components/Form/FormProvider";
 import RHFDatePicker from "~/components/Form/RHFDatePicker";
 import RHFTextField from "~/components/Form/RHFTextField";
-import IActor from "~/interfaces/actor.interface";
+import { useAppDispatch } from "~/redux/hooks";
+import { actorSagaActionTypes } from "~/redux/sagaActionTypes";
+import AlertModal from "../AlertModal";
 import Editor from "../Editor";
 import CustomErrorText from "../Form/CustomErrorText";
 import ImageGallery from "../ImageGallery";
+import Thumbnail from "../Thumbnail";
 
 interface ActorFormProps {
   type?: "new" | "edit";
-  actor?: IActor;
 }
 
-const ActorForm: React.FC<ActorFormProps> = ({ type = "new", actor }) => {
+const ActorForm: React.FC<ActorFormProps> = ({ type = "new" }) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const actor = type === "edit" && location.state ? location.state.actor : null;
+  const [avatar, setAvatar] = useState<string>(actor ? actor.avatar : "");
+  const [images, setImages] = useState<string[]>(actor ? actor.images : []);
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   const StaffSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập tên phim"),
@@ -27,10 +36,12 @@ const ActorForm: React.FC<ActorFormProps> = ({ type = "new", actor }) => {
   });
 
   const defaultValues = {
-    name: (actor && actor.name) || "",
-    story: (actor && actor.story) || "",
-    nation: (actor && actor.nation) || "",
-    images: (actor && actor.images) || [],
+    name: actor ? actor.name : "",
+    story: actor ? actor.story : "",
+    nation: actor ? actor.nation : "",
+    birthday: actor ? new Date(actor.birthday) : "",
+    images: actor ? actor.images : [],
+    avatar: actor ? actor.avatar : "",
   };
 
   const methods = useForm({
@@ -45,62 +56,145 @@ const ActorForm: React.FC<ActorFormProps> = ({ type = "new", actor }) => {
     setValue,
   } = methods;
 
-  const onSubmit = async (values: any) => {
-    console.log(values);
-
-    if (type === "new") {
-    } else {
-    }
+  const handleShowConfirmDelete = () => {
+    setShowConfirmDelete(true);
   };
 
-  return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={12} md={4}>
-          <RHFTextField name="name" label="Tên diễn viên" />
+  const handleCloseConfirmDelete = () => {
+    setShowConfirmDelete(false);
+  };
+
+  const handleDelete = () => {
+    dispatch({
+      type: actorSagaActionTypes.DELETE_ACTOR_SAGA,
+      payload: { id: actor.id, navigate },
+    });
+  };
+
+  const onSubmit = async (values: any) => {
+    const { birthday } = values;
+
+    if (type === "new")
+      dispatch({
+        type: actorSagaActionTypes.ADD_ACTOR_SAGA,
+        payload: {
+          actor: {
+            ...values,
+            birthday: birthday.$d ? birthday.$d.toISOString() : birthday,
+          },
+          navigate,
+        },
+      });
+    else
+      dispatch({
+        type: actorSagaActionTypes.UPDATE_ACTOR_SAGA,
+        payload: {
+          actor: {
+            ...values,
+            id: actor._id,
+            birthday: birthday.$d ? birthday.$d.toISOString() : birthday,
+          },
+          navigate,
+        },
+      });
+  };
+
+  return type === "edit" && !actor ? (
+    <Box
+      sx={{
+        height: "200px",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Typography>Không tìm thấy diễn viên</Typography>
+    </Box>
+  ) : (
+    <Box>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={12} md={4}>
+            <RHFTextField name="name" label="Tên diễn viên" />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={4}>
+            <RHFDatePicker name="birthday" label="Ngày sinh" />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={4}>
+            <RHFTextField name="nation" label="Quốc tịch" />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Thumbnail
+              thumbnail={avatar}
+              handleChangeThumbnail={(avatar) => {
+                setAvatar(avatar);
+                setValue("avatar", avatar);
+              }}
+              crop={true}
+            />
+            {errors.avatar && (
+              <CustomErrorText
+                errorText={errors.avatar.message?.toString() || ""}
+              />
+            )}
+          </Grid>
+
+          <Grid item xs={12}>
+            <ImageGallery
+              gallery={images}
+              handleChangeGallery={(images) => {
+                setImages(images);
+                setValue("images", images);
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Editor
+              content={getValues().story}
+              handleChange={(value) => {
+                setValue("story", value);
+              }}
+            />
+            {errors.story && (
+              <CustomErrorText
+                errorText={errors.story.message?.toString() || ""}
+              />
+            )}
+          </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFDatePicker name="birthday" label="Ngày sinh" />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="nation" label="Quốc tịch" />
-        </Grid>
-
-        <Grid item xs={12}>
-          <ImageGallery
-            gallery={getValues().images}
-            handleChangeGallery={(images) => {
-              setValue("images", images);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Editor
-            content={getValues().story}
-            handleChange={(value) => {
-              setValue("story", value);
-            }}
-          />
-          {errors.story && (
-            <CustomErrorText errorText={errors.story.message || ""} />
-          )}
-        </Grid>
-      </Grid>
-
-      <Stack direction="row" justifyContent="end" sx={{ mt: 3 }} columnGap={2}>
-        {type === "edit" && <Button variant="outlined">Xóa phim</Button>}
-        <LoadingButton
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
+        <Stack
+          direction="row"
+          justifyContent="end"
+          sx={{ mt: 3 }}
+          columnGap={2}
         >
-          {type === "new" ? "Tạo mới" : "Cập nhật"}
-        </LoadingButton>
-      </Stack>
-    </FormProvider>
+          {type === "edit" && (
+            <Button variant="outlined" onClick={handleShowConfirmDelete}>
+              Xóa diễn viên
+            </Button>
+          )}
+          <LoadingButton
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            {type === "new" ? "Tạo mới" : "Cập nhật"}
+          </LoadingButton>
+        </Stack>
+      </FormProvider>
+      <AlertModal
+        content="Bạn chắc chắn muốn xóa diễn viên?"
+        open={showConfirmDelete}
+        onClose={handleCloseConfirmDelete}
+        onAccept={handleDelete}
+      />
+    </Box>
   );
 };
 

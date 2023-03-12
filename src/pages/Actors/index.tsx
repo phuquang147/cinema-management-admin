@@ -6,11 +6,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ActionsMenu from "~/components/ActionsMenu";
 import Iconify from "~/components/Iconify";
 import Table from "~/components/Table";
-import actors from "~/_mock/actors";
+import IActor from "~/interfaces/actor.interface";
+import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import { actorSagaActionTypes } from "~/redux/sagaActionTypes";
 
 const columns = [
   {
@@ -21,10 +24,10 @@ const columns = [
     align: "center",
     minWidth: 100,
     renderCell: (params: any) => {
-      // const { row } = params;
+      const { row } = params;
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar alt="" src="https://i.pravatar.cc/300" />
+          <Avatar alt="" src={row.avatar} />
         </Stack>
       );
     },
@@ -78,18 +81,14 @@ const columns = [
     minWidth: 180,
     flex: 1,
     renderCell: (params: any) => {
-      const { name, birthday, id, handleOpenDetail, handleDelete } = params.row;
-
-      const actor = {
-        name,
-        birthday,
-        id,
-      };
+      const { handleEdit, handleOpenDetail, handleDelete, ...actor } =
+        params.row;
 
       return (
         <ActionsMenu
           item={actor}
           handleOpenDetail={handleOpenDetail}
+          onEdit={handleEdit}
           onDelete={handleDelete}
         />
       );
@@ -98,12 +97,23 @@ const columns = [
 ];
 
 const Actors: React.FC = () => {
-  const handleDelete = async (actorId: string) => {};
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const actors = useAppSelector((state) => state.actor.actors);
 
-  const mappedRows = actors.map((actor) => ({
+  const handleEdit = (actor: IActor) => {
+    navigate(`/dien-vien/${actor.slug}`, { state: { actor } });
+  };
+
+  const mappedRows = actors.map((actor: IActor) => ({
     ...actor,
-    handleDelete,
+    id: actor._id,
+    handleEdit,
   }));
+
+  useEffect(() => {
+    dispatch({ type: actorSagaActionTypes.GET_ACTORS_SAGA });
+  }, [dispatch]);
 
   return (
     <Container>

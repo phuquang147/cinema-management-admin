@@ -1,9 +1,10 @@
 export default interface IActor {
-  id: string;
+  _id: string;
   name: string;
   birthday: Date;
   nation: string;
   story: string;
   images: string[];
+  avatar: string;
   slug: string;
 }
