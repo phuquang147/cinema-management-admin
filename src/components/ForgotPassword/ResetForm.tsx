@@ -1,9 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { IconButton, InputAdornment, Stack, Typography } from "@mui/material";
+import { IconButton, InputAdornment, Stack } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import * as Yup from "yup";
 import FormProvider from "~/components/Form/FormProvider";
 import RHFTextField from "~/components/Form/RHFTextField";
@@ -11,19 +11,28 @@ import Iconify from "~/components/Iconify";
 import { useAppDispatch } from "~/redux/hooks";
 import { authSagaActionTypes } from "~/redux/sagaActionTypes";
 
-export default function LoginForm() {
+export default function ResetForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const { token, id } = useParams();
   const dispatch = useAppDispatch();
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const LoginSchema = Yup.object().shape({
-    username: Yup.string().required("Vui lòng nhập tên đăng nhập"),
-    password: Yup.string().required("Vui lòng nhập mật khẩu"),
+    password: Yup.string()
+      .min(6, "Mật khẩu phải có ít nhất 6 kí tự")
+      .required("Vui lòng nhập mật khẩu"),
+    confirmPassword: Yup.string().test(
+      "isEqual",
+      "Vui lòng xác nhận lại mật khẩu",
+      (value, testContext) => {
+        if (testContext.parent.password !== value) return false;
+        return true;
+      }
+    ),
   });
 
   const defaultValues = {
-    username: "",
     password: "",
   };
 
@@ -35,20 +44,24 @@ export default function LoginForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
   } = methods;
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async () => {
+    const { password } = getValues();
+
     dispatch({
-      type: authSagaActionTypes.LOGIN_SAGA,
-      payload: { data: values, navigate },
+      type: authSagaActionTypes.CHANGE_PASSWORD_SAGA,
+      payload: {
+        data: { password, passwordToken: token, accountId: id },
+        navigate,
+      },
     });
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="username" label="Tên đăng nhập" />
-
         <RHFTextField
           name="password"
           label="Mật khẩu"
@@ -68,26 +81,28 @@ export default function LoginForm() {
             ),
           }}
         />
-      </Stack>
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="end"
-        sx={{ my: 2, textDecoration: "none" }}
-      >
-        <Typography
-          component={Link}
-          to="/quen-mat-khau"
-          color="primary"
-          sx={{
-            textDecoration: "none !important",
-            fontWeight: 700,
-            fontSize: "14px",
+        <RHFTextField
+          name="confirmPassword"
+          label="Xác nhận mật khẩu"
+          type={showConfirmPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  <Iconify
+                    icon={
+                      showConfirmPassword ? "eva:eye-fill" : "eva:eye-off-fill"
+                    }
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
-        >
-          Quên mật khẩu?
-        </Typography>
+        />
       </Stack>
 
       <LoadingButton
@@ -96,8 +111,9 @@ export default function LoginForm() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
+        sx={{ mt: 3 }}
       >
-        Đăng Nhập
+        Xác nhận
       </LoadingButton>
     </FormProvider>
   );
