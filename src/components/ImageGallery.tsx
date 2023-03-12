@@ -1,6 +1,6 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   Grid,
   IconButton,
   ImageList,
@@ -8,28 +8,60 @@ import {
   ImageListItemBar,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import { imageSagaActionTypes } from "~/redux/sagaActionTypes";
 import Iconify from "./Iconify";
+import ImageCropper from "./ImageCropper";
 
 interface ImageGalleryProps {
   gallery: string[];
   handleChangeGallery: (gallery: string[]) => void;
+  crop?: boolean;
 }
+
 const ImageGallery: React.FC<ImageGalleryProps> = ({
   gallery,
   handleChangeGallery,
+  crop,
 }) => {
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((state) => state.loading.loading);
+  const [showCrop, setShowCrop] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
+
+  const handleCloseCrop = () => {
+    setShowCrop(false);
+  };
+
+  const handleChangeImage = (e: any) => {
+    if (e.target && e.target.files && e.target.files.length > 0) {
+      if (crop) {
+        setSelectedFile(e.target.files[0]);
+        setShowCrop(true);
+      } else uploadImage(e.target.files[0]);
+    }
+  };
+
+  const handleUploadCroppedImage = (image: File) => {
+    uploadImage(image);
+  };
+
   const uploadImage = (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    // ImageServices.postImage(formData)
-    //   .then((response) => {
-    //     const newGallery = gallery;
-    //     newGallery.push(response.data.link);
-    //     handleChangeGallery(newGallery);
-    //   })
-    //   .catch((error) => {
-    //     showSweetAlert("Tải ảnh thất bại", "error");
-    //   });
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      dispatch({
+        type: imageSagaActionTypes.POST_IMAGE_SAGA,
+        payload: { image: formData, handleGetImageUrl: handleUpdateGallery },
+      });
+    }
+  };
+
+  const handleUpdateGallery = (filePath: string) => {
+    console.log([...gallery, filePath]);
+
+    handleChangeGallery([...gallery, filePath]);
   };
 
   const handleDeleteImage = (image: string) => {
@@ -50,11 +82,12 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <Typography>Album ảnh</Typography>
-        <Button
+        <LoadingButton
           variant="outlined"
           color="info"
           component="label"
           sx={{ width: "60px", height: "60px" }}
+          loading={loading}
         >
           <Iconify
             icon="tabler:camera-plus"
@@ -62,13 +95,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
           />
           <input
             type="file"
-            accept="image/png, image/gif, image/jpeg"
+            accept="image/png, image/gif, image/jpeg, image/webp"
             hidden
-            onChange={(e) => {
-              uploadImage(e.target.files![0]);
-            }}
+            onChange={(e) => handleChangeImage(e)}
           />
-        </Button>
+        </LoadingButton>
       </Box>
       <ImageList variant="masonry" cols={4} gap={8}>
         {gallery.map((image) => (
@@ -96,6 +127,12 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
           </ImageListItem>
         ))}
       </ImageList>
+      <ImageCropper
+        file={selectedFile}
+        open={showCrop}
+        onClose={handleCloseCrop}
+        handleUploadCroppedImage={handleUploadCroppedImage}
+      />
     </Grid>
   );
 };
