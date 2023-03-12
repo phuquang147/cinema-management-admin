@@ -1,8 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import "react-image-crop/dist/ReactCrop.css";
 import "react-quill/dist/quill.snow.css";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 import { store } from "~/redux/store";
 import ThemeProvider from "~/theme";
 import App from "./App";
