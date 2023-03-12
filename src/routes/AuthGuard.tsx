@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import MainLayout from "~/layouts/MainLayout";
 
 const Auth = () => {
@@ -9,12 +9,16 @@ const Auth = () => {
 };
 
 const AuthGuard = () => {
+  const location = useLocation();
+
+  if (location.pathname.startsWith("/quen-mat-khau")) return <Outlet />;
+
   let isAuth = Auth();
-  return !isAuth ? (
+  return isAuth ? (
     <MainLayout />
   ) : (
     <Navigate
-      to="/login"
+      to="/dang-nhap"
       state={{ message: "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại" }}
     />
   );

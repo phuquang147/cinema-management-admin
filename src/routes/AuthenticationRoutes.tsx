@@ -1,22 +1,23 @@
 import MinimalLayout from "~/layouts/MinimalLayout";
-import Login from "~/pages/Login";
+import ForgotPassword from "~/pages/Auth/ForgotPassword";
+import Login from "~/pages/Auth/Login";
 
 const AuthenticationRoutes = {
   path: "/",
   element: <MinimalLayout />,
   children: [
     {
-      path: "/login",
+      path: "/dang-nhap",
       element: <Login />,
     },
-    // {
-    //   path: '/forgot-password',
-    //   element: <ForgotPassword />,
-    // },
-    // {
-    //   path: '/reset-password/:token',
-    //   element: <ForgotPassword />,
-    // },
+    {
+      path: "/quen-mat-khau",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "/quen-mat-khau/:token/:id",
+      element: <ForgotPassword />,
+    },
   ],
 };
 

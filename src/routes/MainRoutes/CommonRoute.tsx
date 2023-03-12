@@ -1,10 +1,22 @@
 import { RouteObject } from "react-router-dom";
 import Dashboard from "~/pages/Dashboard";
 import Page404 from "~/pages/Page404";
+// Đặt vé
+import Booking from "~/pages/Booking";
 // Phim
 import Movies from "~/pages/Movies";
 import EditMovie from "~/pages/Movies/EditMovie";
 import NewMovie from "~/pages/Movies/NewMovie";
+// Lịch chiếu
+import ShowTimes from "~/pages/ShowTimes";
+// Phòng chiếu
+import Rooms from "~/pages/Rooms";
+import EditRoom from "~/pages/Rooms/EditRoom";
+import NewRoom from "~/pages/Rooms/NewRoom";
+// Bắp nước
+import Snacks from "~/pages/Snacks";
+import EditSnack from "~/pages/Snacks/EditSnack";
+import NewSnack from "~/pages/Snacks/NewSnack";
 // Diễn viên
 import Actors from "~/pages/Actors";
 import EditActor from "~/pages/Actors/EditActor";
@@ -17,11 +29,19 @@ import NewStaff from "~/pages/Staffs/NewStaff";
 import Posts from "~/pages/Posts";
 import EditPost from "~/pages/Posts/EditPost";
 import NewPost from "~/pages/Posts/NewPost";
+// Cài đặt chung
+import Genres from "~/pages/Settings/Genres";
+import RoomTypes from "~/pages/Settings/RoomTypes";
 
 const CommonRoutes: RouteObject[] = [
   {
     path: "/",
     element: <Dashboard />,
+  },
+  //
+  {
+    path: "/dat-ve",
+    element: <Booking />,
   },
   //Phim
   {
@@ -35,6 +55,37 @@ const CommonRoutes: RouteObject[] = [
   {
     path: "/phim/:id",
     element: <EditMovie />,
+  },
+  // Lịch chiếu
+  {
+    path: "/lich-chieu",
+    element: <ShowTimes />,
+  },
+  // Phòng chiếu
+  {
+    path: "/phong-chieu",
+    element: <Rooms />,
+  },
+  {
+    path: "/them-phong-chieu",
+    element: <NewRoom />,
+  },
+  {
+    path: "/phong-chieu/:id",
+    element: <EditRoom />,
+  },
+  // Bắp nước
+  {
+    path: "/do-an-nhe",
+    element: <Snacks />,
+  },
+  {
+    path: "/them-do-an-nhe",
+    element: <NewSnack />,
+  },
+  {
+    path: "/do-an-nhe/:id",
+    element: <EditSnack />,
   },
   // Diễn viên
   {
@@ -75,6 +126,16 @@ const CommonRoutes: RouteObject[] = [
     path: "/bai-viet/:id",
     element: <EditPost />,
   },
+  // Cài đặt chung
+  {
+    path: "/the-loai-phim",
+    element: <Genres />,
+  },
+  {
+    path: "/loai-phong-chieu",
+    element: <RoomTypes />,
+  },
+
   //
   {
     path: "*",
