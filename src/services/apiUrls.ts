@@ -35,3 +35,11 @@ export const URL_GET_ACTORS = `${DOMAIN_NAME}/actors`;
 export const URL_ADD_ACTOR = `${DOMAIN_NAME}/actors`;
 export const URL_UPDATE_ACTOR = (id: string) => `${DOMAIN_NAME}/actors/${id}`;
 export const URL_DELETE_ACTOR = (id: string) => `${DOMAIN_NAME}/actors/${id}`;
+
+//ACTORS
+export const URL_GET_ROOM_TYPES = `${DOMAIN_NAME}/room-types`;
+export const URL_ADD_ROOM_TYPE = `${DOMAIN_NAME}/room-types`;
+export const URL_UPDATE_ROOM_TYPE = (id: string) =>
+  `${DOMAIN_NAME}/room-types/${id}`;
+export const URL_DELETE_ROOM_TYPE = (id: string) =>
+  `${DOMAIN_NAME}/room-types/${id}`;
