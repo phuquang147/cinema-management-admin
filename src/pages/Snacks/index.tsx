@@ -1,20 +1,12 @@
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Iconify from "~/components/Iconify";
-import Select from "~/components/Select";
 import Snack from "~/components/Snacks/Snack";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { snackSagaActionTypes } from "~/redux/sagaActionTypes";
 
-const OPTIONS = [
-  { value: "all", label: "Tất cả" },
-  { value: "selling", label: "Đang bán" },
-  { value: "stopSelling", label: "Ngừng bán" },
-];
-
 const Snacks: React.FC = () => {
-  const [selectedFilter, setSelectedFilter] = useState(OPTIONS[0]);
   const dispatch = useAppDispatch();
   const snacks = useAppSelector((state) => state.snack.snacks);
 
@@ -33,11 +25,6 @@ const Snacks: React.FC = () => {
       >
         <Typography variant="h4">Đồ ăn nhẹ</Typography>
         <Stack direction="row" columnGap={2}>
-          <Select
-            options={OPTIONS}
-            selected={selectedFilter}
-            setSelected={setSelectedFilter}
-          />
           <Button
             variant="contained"
             component={Link}

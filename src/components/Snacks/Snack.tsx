@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import ISnack from "~/interfaces/snack.interface";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
 
-interface SnackProps {
+type SnackProps = {
   snack: ISnack;
-}
+};
 
 const Snack: React.FC<SnackProps> = ({ snack }) => {
   return (
@@ -29,7 +29,6 @@ const Snack: React.FC<SnackProps> = ({ snack }) => {
           to={`/do-an-nhe/${snack._id}`}
           state={{ snack }}
           sx={{
-            mt: 1,
             color: "#000",
             textDecoration: "none",
             overflow: "hidden",

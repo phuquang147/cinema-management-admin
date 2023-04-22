@@ -1,6 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  InputAdornment,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,13 +16,14 @@ import FormProvider from "~/components/Form/FormProvider";
 import RHFTextField from "~/components/Form/RHFTextField";
 import { useAppDispatch } from "~/redux/hooks";
 import { snackSagaActionTypes } from "~/redux/sagaActionTypes";
+import AlertModal from "../AlertModal";
 import CustomErrorText from "../Form/CustomErrorText";
 import NumericFormatCustom from "../NumericFormatCustom";
 import Thumbnail from "../Thumbnail";
 
-interface SnackFormProps {
+type SnackFormProps = {
   type?: "new" | "edit";
-}
+};
 
 const SnackForm: React.FC<SnackFormProps> = ({ type = "new" }) => {
   const dispatch = useAppDispatch();
@@ -24,6 +32,7 @@ const SnackForm: React.FC<SnackFormProps> = ({ type = "new" }) => {
   const snack = type === "edit" && location.state ? location.state.snack : null;
 
   const [thumbnail, setThumbnail] = useState<string>(snack ? snack.image : "");
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   const SnackSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập tên món hoặc combo"),
@@ -48,6 +57,14 @@ const SnackForm: React.FC<SnackFormProps> = ({ type = "new" }) => {
     setValue,
   } = methods;
 
+  const handleShowConfirmDelete = () => {
+    setShowConfirmDelete(true);
+  };
+
+  const handleCloseConfirmDelete = () => {
+    setShowConfirmDelete(false);
+  };
+
   const onSubmit = async (values: any) => {
     if (type === "new") {
       dispatch({
@@ -62,10 +79,10 @@ const SnackForm: React.FC<SnackFormProps> = ({ type = "new" }) => {
     }
   };
 
-  const handleDeleteSnack = (id: string) => {
+  const handleDeleteSnack = () => {
     dispatch({
       type: snackSagaActionTypes.DELETE_SNACK_SAGA,
-      payload: { id, navigate },
+      payload: { id: snack._id, navigate },
     });
   };
 
@@ -82,58 +99,71 @@ const SnackForm: React.FC<SnackFormProps> = ({ type = "new" }) => {
       <Typography>Không tìm thấy món</Typography>
     </Box>
   ) : (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={12} md={8}>
-          <RHFTextField name="name" label="Tên món hoặc combo" />
-        </Grid>
+    <Box>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={12} md={8}>
+            <RHFTextField name="name" label="Tên món hoặc combo" />
+          </Grid>
 
-        <Grid item xs={12} sm={12} md={4}>
-          <RHFTextField
-            name="price"
-            label="Giá"
-            InputProps={{
-              inputComponent: NumericFormatCustom as any,
-            }}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <Thumbnail
-            thumbnail={thumbnail}
-            handleChangeThumbnail={(thumbnail) => {
-              setThumbnail(thumbnail);
-              setValue("image", thumbnail);
-            }}
-            crop={true}
-          />
-          {errors.image && (
-            <CustomErrorText
-              errorText={errors.image.message?.toString() || ""}
+          <Grid item xs={12} sm={12} md={4}>
+            <RHFTextField
+              name="price"
+              label="Giá"
+              InputProps={{
+                inputComponent: NumericFormatCustom as any,
+                endAdornment: (
+                  <InputAdornment position="end">VNĐ</InputAdornment>
+                ),
+              }}
             />
-          )}
-        </Grid>
-      </Grid>
+          </Grid>
 
-      <Stack direction="row" justifyContent="end" sx={{ mt: 3 }} columnGap={2}>
-        {type === "edit" && (
-          <Button
-            variant="outlined"
-            onClick={() => handleDeleteSnack(snack._id)}
-          >
-            Xóa món
-          </Button>
-        )}
-        <LoadingButton
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
+          <Grid item xs={12}>
+            <Thumbnail
+              thumbnail={thumbnail}
+              handleChangeThumbnail={(thumbnail) => {
+                setThumbnail(thumbnail);
+                setValue("image", thumbnail);
+              }}
+              crop={true}
+            />
+            {errors.image && (
+              <CustomErrorText
+                errorText={errors.image.message?.toString() || ""}
+              />
+            )}
+          </Grid>
+        </Grid>
+
+        <Stack
+          direction="row"
+          justifyContent="end"
+          sx={{ mt: 3 }}
+          columnGap={2}
         >
-          {type === "new" ? "Tạo mới" : "Cập nhật"}
-        </LoadingButton>
-      </Stack>
-    </FormProvider>
+          {type === "edit" && (
+            <Button variant="outlined" onClick={handleShowConfirmDelete}>
+              Xóa món
+            </Button>
+          )}
+          <LoadingButton
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            {type === "new" ? "Tạo mới" : "Cập nhật"}
+          </LoadingButton>
+        </Stack>
+      </FormProvider>
+      <AlertModal
+        content="Bạn chắc chắn muốn xóa món?"
+        open={showConfirmDelete}
+        onClose={handleCloseConfirmDelete}
+        onAccept={handleDeleteSnack}
+      />
+    </Box>
   );
 };
 
