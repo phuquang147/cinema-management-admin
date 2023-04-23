@@ -7,14 +7,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useEffect } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import ActionsMenu from "~/components/ActionsMenu";
 import Iconify from "~/components/Iconify";
-import StaffDetail from "~/components/Staffs/StaffDetail";
 import Table from "~/components/Table";
 import IStaff from "~/interfaces/staff.interface";
-import staffs from "~/_mock/staffs";
+import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import { staffSagaActionTypes } from "~/redux/sagaActionTypes";
 
 const columns = [
   {
@@ -25,10 +25,14 @@ const columns = [
     align: "center",
     minWidth: 100,
     renderCell: (params: any) => {
-      // const { row } = params;
+      const { row } = params;
+
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar alt="" src="https://i.pravatar.cc/300" />
+          <Avatar
+            alt=""
+            src={row.avatar ? row.avatar : "/assets/images/user.png"}
+          />
         </Stack>
       );
     },
@@ -154,67 +158,34 @@ const columns = [
     sortable: false,
     hideable: false,
     filterable: false,
-    minWidth: 180,
+    minWidth: 80,
     flex: 1,
     renderCell: (params: any) => {
-      const {
-        name,
-        phone,
-        address,
-        email,
-        gender,
-        birthday,
-        status,
-        id,
-        handleOpenDetail,
-        handleDelete,
-      } = params.row;
+      const { handleEdit, ...staff } = params.row;
 
-      const staff = {
-        name,
-        phone,
-        address,
-        email,
-        gender,
-        status,
-        birthday,
-        id,
-      };
-      return (
-        <ActionsMenu
-          item={staff}
-          handleOpenDetail={handleOpenDetail}
-          onDelete={handleDelete}
-        />
-      );
+      return <ActionsMenu item={staff} onEdit={handleEdit} />;
     },
   },
 ];
 
 export default function Staffs() {
-  const [openDetail, setOpenDetail] = useState<IStaff | null>(null);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const staffs = useAppSelector((state) => state.staff.staffs);
 
-  const handleCloseDetail = () => {
-    setOpenDetail(null);
+  const handleEdit = (staff: IStaff) => {
+    navigate(`/nhan-vien/${staff._id}`, { state: { staff } });
   };
-
-  const getAllStaffs = async () => {};
-
-  useEffect(() => {
-    getAllStaffs();
-  }, []);
-
-  const handleOpenDetail = (staff: IStaff) => {
-    setOpenDetail(staff);
-  };
-
-  const handleDelete = async (staffId: string) => {};
 
   const mappedRows = staffs.map((staff) => ({
     ...staff,
-    handleOpenDetail,
-    handleDelete,
+    id: staff._id,
+    handleEdit,
   }));
+
+  useEffect(() => {
+    dispatch({ type: staffSagaActionTypes.GET_STAFFS_SAGA });
+  }, [dispatch]);
 
   return (
     <Container>
@@ -248,11 +219,6 @@ export default function Staffs() {
       >
         <Table rows={mappedRows} columns={columns} />
       </Card>
-      <StaffDetail
-        open={Boolean(openDetail)}
-        staff={openDetail}
-        onClose={handleCloseDetail}
-      />
     </Container>
   );
 }
