@@ -1,5 +1,7 @@
 import ImageUploader from "quill-image-uploader";
 import ReactQuill, { Quill } from "react-quill";
+import { toast } from "react-toastify";
+import ImageServices from "~/services/imageServices";
 
 Quill.register("modules/imageUploader", ImageUploader);
 
@@ -22,13 +24,13 @@ const modules = {
       return new Promise((resolve, reject) => {
         const formData = new FormData();
         formData.append("file", file);
-        // ImageServices.postImage(formData)
-        //   .then((response) => {
-        //     resolve(response.data.link);
-        //   })
-        //   .catch((error) => {
-        //     showSweetAlert("Tải ảnh thất bại", "error");
-        //   });
+        ImageServices.postImage(formData)
+          .then((response) => {
+            resolve(response.data.filePath);
+          })
+          .catch((error) => {
+            toast.error("Tải ảnh thất bại");
+          });
       });
     },
   },
@@ -64,7 +66,7 @@ const Editor: React.FC<EditorProps> = ({ content, handleChange }) => {
   return (
     <ReactQuill
       modules={modules}
-      placeholder="Nhập nội dung bài viết tại đây ..."
+      placeholder="Nhập nội dung tại đây ..."
       value={content}
       onChange={(value: string) => handleChange(value)}
       formats={formats}
