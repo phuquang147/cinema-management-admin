@@ -14,6 +14,21 @@ code {
     monospace;
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
 /* custom editor content style */
 .ql-editor {
   color: #64748b;
@@ -85,4 +100,9 @@ code {
   & ol > li::before {
     margin-left: -32px !important;
   }
+}
+
+.ds-selected {
+  color: red;
+  background-color: #f45e61;
 }

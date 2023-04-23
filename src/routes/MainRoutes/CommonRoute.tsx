@@ -1,6 +1,6 @@
 import { RouteObject } from "react-router-dom";
 import Dashboard from "~/pages/Dashboard";
-import Page404 from "~/pages/Page404";
+import Page404 from "~/pages/404";
 // Đặt vé
 import Booking from "~/pages/Booking";
 // Phim
