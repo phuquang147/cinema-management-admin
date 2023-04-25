@@ -2,9 +2,11 @@ import { Avatar, Box, Drawer, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+import Logo from "~/components/Logo";
 import Scrollbar from "~/components/Scrollbar";
 import useResponsive from "~/hooks/useResponsive";
 import NavSection from "~/layouts/MainLayout/NavSection";
+import { useAppSelector } from "~/redux/hooks";
 import navConfig from "./NavConfig";
 
 const DRAWER_WIDTH = 280;
@@ -33,7 +35,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpenSidebar, onCloseSidebar }) => {
   const { pathname } = useLocation();
-  // const user = useSelector(selectUser);
+  const user = useAppSelector((state) => state.user.user);
 
   const isDesktop = useResponsive("up", "lg");
 
@@ -62,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpenSidebar, onCloseSidebar }) => {
       }}
     >
       <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
-        {/* <Logo /> */}
+        <Logo />
       </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
@@ -71,12 +73,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpenSidebar, onCloseSidebar }) => {
             <Avatar src="" alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
-                {/* {user?.name} */}
-                Phu Quang
+                {user ? user.name : ""}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {/* {user?.role?.name} */}
-                Quan ly
+                {user ? user.role : ""}
               </Typography>
             </Box>
           </AccountStyle>

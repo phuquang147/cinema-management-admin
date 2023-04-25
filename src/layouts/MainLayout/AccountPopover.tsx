@@ -12,8 +12,7 @@ import Cookies from "js-cookie";
 import { useRef, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import MenuPopover from "~/HOC/MenuPopover";
-// import { useSelector } from "react-redux";
-// import { selectUser } from '~/redux/dataSlice';
+import { useAppSelector } from "~/redux/hooks";
 
 const MENU_OPTIONS = [
   {
@@ -27,11 +26,9 @@ const AccountPopover: React.FC = () => {
   const anchorRef = useRef(null);
   const navigate = useNavigate();
   const [open, setOpen] = useState<HTMLElement | null>(null);
-  // const user = useSelector(selectUser);
+  const user = useAppSelector((state) => state.user.user);
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget);
-
     setOpen(event.currentTarget);
   };
 
@@ -42,8 +39,8 @@ const AccountPopover: React.FC = () => {
   const handleLogout = () => {
     handleClose();
     Cookies.remove("token");
-    Cookies.remove("accountId");
-    navigate("/login");
+    Cookies.remove("user");
+    navigate("/dang-nhap");
   };
 
   return (
@@ -87,10 +84,10 @@ const AccountPopover: React.FC = () => {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {/* {user?.name} */}
+            {user ? user.name : ""}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {/* {user?.email} */}
+            {user ? user.email : ""}
           </Typography>
         </Box>
 
@@ -102,7 +99,6 @@ const AccountPopover: React.FC = () => {
               key={option.label}
               to={option.linkTo}
               component={RouterLink}
-              // state={user}
               onClick={handleClose}
             >
               {option.label}
