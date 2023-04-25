@@ -33,11 +33,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -98,14 +94,14 @@ export default function Posts() {
       <TabPanel value={tab} index={0}>
         <Grid container spacing={3}>
           {allPosts.map((post: IPost, index: number) => (
-            <Post key={post.id} post={post} index={index} />
+            <Post key={post._id} post={post} index={index} />
           ))}
         </Grid>
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <Grid container spacing={3}>
           {myPosts.map((post: IPost, index: number) => (
-            <Post key={post.id} post={post} index={index} />
+            <Post key={post._id} post={post} index={index} />
           ))}
         </Grid>
       </TabPanel>
