@@ -2,8 +2,11 @@ import ActorReducer from "./ActorReducer";
 import GenreReducer from "./GenreReducer";
 import LoadingReducer from "./LoadingReducer";
 import MovieReducer from "./MovieReducer";
+import PostReducer from "./PostReducer";
+import RoomReducer from "./RoomReducer";
 import RoomTypeReducer from "./RoomTypeReducer";
 import SnackReducer from "./SnackReducer";
+import StaffReducer from "./StaffReducer";
 import UserReducer from "./UserReducer";
 
 const rootReducer = {
@@ -14,6 +17,9 @@ const rootReducer = {
   snack: SnackReducer,
   actor: ActorReducer,
   roomType: RoomTypeReducer,
+  staff: StaffReducer,
+  post: PostReducer,
+  room: RoomReducer,
 };
 
 export default rootReducer;

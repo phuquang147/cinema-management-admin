@@ -36,10 +36,30 @@ export const URL_ADD_ACTOR = `${DOMAIN_NAME}/actors`;
 export const URL_UPDATE_ACTOR = (id: string) => `${DOMAIN_NAME}/actors/${id}`;
 export const URL_DELETE_ACTOR = (id: string) => `${DOMAIN_NAME}/actors/${id}`;
 
-//ACTORS
+//ROOM TYPES
 export const URL_GET_ROOM_TYPES = `${DOMAIN_NAME}/room-types`;
 export const URL_ADD_ROOM_TYPE = `${DOMAIN_NAME}/room-types`;
 export const URL_UPDATE_ROOM_TYPE = (id: string) =>
   `${DOMAIN_NAME}/room-types/${id}`;
 export const URL_DELETE_ROOM_TYPE = (id: string) =>
   `${DOMAIN_NAME}/room-types/${id}`;
+
+//STAFFS
+export const URL_GET_STAFFS = `${DOMAIN_NAME}/users`;
+export const URL_ADD_STAFF = `${DOMAIN_NAME}/users`;
+export const URL_UPDATE_STAFF = (id: string) => `${DOMAIN_NAME}/users/${id}`;
+export const URL_DELETE_STAFF = (id: string) => `${DOMAIN_NAME}/users/${id}`;
+
+//POSTS
+export const URL_GET_ALL_POSTS = `${DOMAIN_NAME}/posts`;
+export const URL_GET_MY_POSTS = `${DOMAIN_NAME}/my-posts`;
+export const URL_ADD_POST = `${DOMAIN_NAME}/my-posts`;
+export const URL_UPDATE_POST = (id: string) => `${DOMAIN_NAME}/my-posts/${id}`;
+export const URL_DELETE_POST = (id: string) => `${DOMAIN_NAME}/my-posts/${id}`;
+
+//ROOMS
+export const URL_GET_ROOMS = `${DOMAIN_NAME}/rooms`;
+export const URL_GET_ROOM_BY_ID = (id: string) => `${DOMAIN_NAME}/rooms/${id}`;
+export const URL_ADD_ROOM = `${DOMAIN_NAME}/rooms`;
+export const URL_UPDATE_ROOM = (id: string) => `${DOMAIN_NAME}/rooms/${id}`;
+export const URL_DELETE_ROOM = (id: string) => `${DOMAIN_NAME}/rooms/${id}`;

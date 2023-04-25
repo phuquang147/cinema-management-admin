@@ -1,4 +1,4 @@
-import { Card, Container, Stack, Typography } from "@mui/material";
+import { Container, Stack, Typography } from "@mui/material";
 import PostForm from "~/components/Posts/PostForm";
 
 const NewPost: React.FC = () => {
@@ -15,9 +15,7 @@ const NewPost: React.FC = () => {
         </Typography>
       </Stack>
 
-      <Card sx={{ padding: 4 }}>
-        <PostForm />
-      </Card>
+      <PostForm />
     </Container>
   );
 };

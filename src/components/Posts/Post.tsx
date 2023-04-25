@@ -5,16 +5,18 @@ import {
   Card,
   CardContent,
   Grid,
-  Link,
   Theme,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { MUIStyledCommonProps } from "@mui/system";
-import { ForwardRefExoticComponent, ReactNode, RefAttributes } from "react";
-import { Link as RouterLink, LinkProps } from "react-router-dom";
+import { ReactNode } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Iconify from "~/components/Iconify";
+import { POST_STATUS } from "~/constants";
 import IPost from "~/interfaces/post.interface";
+import { ISOToDateTime } from "~/utils/formatDateTime";
 import SvgIconStyle from "../SvgIconStyle";
 
 const CardMediaStyle = styled("div")({
@@ -25,15 +27,11 @@ const CardMediaStyle = styled("div")({
 const TitleStyle: StyledComponent<
   {
     children: ReactNode;
-    component?: ForwardRefExoticComponent<
-      LinkProps & RefAttributes<HTMLAnchorElement>
-    >;
-    to?: string;
     [x: string]: any;
   } & MUIStyledCommonProps<Theme>,
   {},
   {}
-> = styled(Link)({
+> = styled(Typography)({
   height: 44,
   overflow: "hidden",
   WebkitLineClamp: 2,
@@ -50,14 +48,6 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
   bottom: theme.spacing(-2),
 }));
 
-const InfoStyle = styled("div")(({ theme }) => ({
-  display: "flex",
-  flexWrap: "wrap",
-  justifyContent: "flex-end",
-  marginTop: theme.spacing(3),
-  color: theme.palette.text.disabled,
-}));
-
 const CoverImgStyle = styled("img")({
   top: 0,
   width: "100%",
@@ -66,17 +56,16 @@ const CoverImgStyle = styled("img")({
   position: "absolute",
 });
 
-interface PostProps {
+type PostProps = {
   post: IPost;
   index: number;
-}
+};
 
 const Post: React.FC<PostProps> = ({ post, index }) => {
-  const { cover, title, author, view, createdAt } = post;
+  const theme = useTheme();
+  const { thumbnail, title, author, view, createdAt, status } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
-
-  const POST_INFO = [{ number: view, icon: "eva:eye-fill" }];
 
   return (
     <Grid
@@ -84,6 +73,10 @@ const Post: React.FC<PostProps> = ({ post, index }) => {
       xs={12}
       sm={latestPostLarge ? 12 : 6}
       md={latestPostLarge ? 6 : 3}
+      to={`/bai-viet/${post.slug}`}
+      component={RouterLink}
+      state={{ post }}
+      sx={{ textDecoration: "none" }}
     >
       <Card sx={{ position: "relative" }}>
         <CardMediaStyle
@@ -120,8 +113,8 @@ const Post: React.FC<PostProps> = ({ post, index }) => {
             }}
           />
           <AvatarStyle
-            alt={author.name}
-            src={author.avatar}
+            alt={""}
+            src={author ? author.avatar : "/assets/images/user.png"}
             sx={{
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,
@@ -133,7 +126,7 @@ const Post: React.FC<PostProps> = ({ post, index }) => {
             }}
           />
 
-          <CoverImgStyle alt={title} src={cover} />
+          <CoverImgStyle alt={title} src={thumbnail} />
         </CardMediaStyle>
 
         <CardContent
@@ -146,20 +139,46 @@ const Post: React.FC<PostProps> = ({ post, index }) => {
             }),
           }}
         >
+          <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <Iconify
+              icon="bxs:user"
+              sx={{
+                color:
+                  index < 3
+                    ? theme.palette.common.white
+                    : theme.palette.common.black,
+                height: 16,
+                width: 16,
+              }}
+            />
+            <Typography
+              gutterBottom
+              sx={{
+                color:
+                  index < 3
+                    ? theme.palette.common.white
+                    : theme.palette.common.black,
+                display: "block",
+                fontSize: 13,
+                fontWeight: 700,
+                margin: 0,
+              }}
+            >
+              {author ? author.name : ""}
+            </Typography>
+          </Box>
+
           <Typography
             gutterBottom
             variant="caption"
-            sx={{ color: "text.disabled", display: "block" }}
+            sx={{ color: "text.disabled", display: "block", marginTop: 1 }}
           >
-            {createdAt.toISOString()}
+            {ISOToDateTime(createdAt)}
           </Typography>
 
           <TitleStyle
-            to={`/bai-viet/${post.id}`}
             color="inherit"
             variant="subtitle2"
-            underline="hover"
-            component={RouterLink}
             sx={{
               ...(latestPostLarge && { typography: "h5", height: 60 }),
               ...((latestPostLarge || latestPost) && {
@@ -170,27 +189,54 @@ const Post: React.FC<PostProps> = ({ post, index }) => {
             {title}
           </TitleStyle>
 
-          <InfoStyle>
-            {POST_INFO.map((info, index) => (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Box
-                key={index}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  ml: index === 0 ? 0 : 1.5,
-                  ...((latestPostLarge || latestPost) && {
-                    color: "grey.500",
-                  }),
+                  height: 16,
+                  width: 16,
+                  borderRadius: 8,
+                  backgroundColor:
+                    status === POST_STATUS.PUBLIC
+                      ? theme.palette.success.main
+                      : theme.palette.error.main,
                 }}
+              ></Box>
+              <Typography
+                variant="caption"
+                color={
+                  index < 3
+                    ? theme.palette.common.white
+                    : theme.palette.common.black
+                }
               >
-                <Iconify
-                  icon={info.icon}
-                  sx={{ width: 16, height: 16, mr: 0.5 }}
-                />
-                <Typography variant="caption">{info.number}</Typography>
-              </Box>
-            ))}
-          </InfoStyle>
+                {status}
+              </Typography>
+            </Box>
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                ml: index === 0 ? 0 : 1.5,
+                ...((latestPostLarge || latestPost) && {
+                  color: "grey.500",
+                }),
+              }}
+            >
+              <Iconify
+                icon="eva:eye-fill"
+                sx={{ width: 16, height: 16, mr: 0.5 }}
+              />
+              <Typography variant="caption">{view}</Typography>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
     </Grid>
