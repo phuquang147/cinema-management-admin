@@ -1,6 +1,5 @@
 import { Box, IconButton } from "@mui/material";
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import Iconify from "~/components/Iconify";
 import IStaff from "~/interfaces/staff.interface";
 import AlertModal from "./AlertModal";
@@ -8,17 +7,16 @@ import AlertModal from "./AlertModal";
 interface ActionMenuProps {
   item: any;
   handleOpenDetail?: (staff: IStaff) => void;
-  onDelete?: () => void;
+  onEdit?: (item: any) => void;
+  onDelete?: (id: String) => void;
 }
 
 const ActionsMenu: React.FC<ActionMenuProps> = ({
   item,
   handleOpenDetail,
+  onEdit,
   onDelete,
 }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   const handleShowConfirmDelete = () => {
@@ -27,10 +25,6 @@ const ActionsMenu: React.FC<ActionMenuProps> = ({
 
   const handleCloseConfirmDelete = () => {
     setShowConfirmDelete(false);
-  };
-
-  const navigateToEditPage = () => {
-    navigate(`${location.pathname}/${item.id}`);
   };
 
   return (
@@ -45,18 +39,27 @@ const ActionsMenu: React.FC<ActionMenuProps> = ({
           <Iconify icon="material-symbols:info-outline-rounded" />
         </IconButton>
       )}
-      <IconButton color="info" onClick={navigateToEditPage}>
-        <Iconify icon="material-symbols:edit-outline-rounded" />
-      </IconButton>
-      <IconButton color="error" onClick={handleShowConfirmDelete}>
-        <Iconify icon="material-symbols:delete-outline-rounded" />
-      </IconButton>
+      {onEdit && (
+        <IconButton
+          color="info"
+          onClick={() => {
+            onEdit(item);
+          }}
+        >
+          <Iconify icon="material-symbols:edit-outline-rounded" />
+        </IconButton>
+      )}
+      {onDelete && (
+        <IconButton color="error" onClick={handleShowConfirmDelete}>
+          <Iconify icon="material-symbols:delete-outline-rounded" />
+        </IconButton>
+      )}
       {onDelete && (
         <AlertModal
           content="Bạn chắc chắn muốn xóa?"
           open={showConfirmDelete}
           onClose={handleCloseConfirmDelete}
-          onAccept={onDelete}
+          onAccept={() => onDelete(item.id)}
         />
       )}
     </Box>
