@@ -9,6 +9,10 @@ import RHFTextField from "~/components/Form/RHFTextField";
 import { useAppDispatch } from "~/redux/hooks";
 import { authSagaActionTypes } from "~/redux/sagaActionTypes";
 
+export interface EmailFormData {
+  email: string;
+}
+
 export default function EmailForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -23,7 +27,7 @@ export default function EmailForm() {
     email: "",
   };
 
-  const methods = useForm({
+  const methods = useForm<EmailFormData>({
     resolver: yupResolver(LoginSchema),
     defaultValues,
   });
@@ -31,14 +35,12 @@ export default function EmailForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
-    getValues,
   } = methods;
 
-  const onSubmit = async () => {
-    const { email } = getValues();
+  const onSubmit = async (values: EmailFormData) => {
     dispatch({
       type: authSagaActionTypes.RESET_PASSWORD_SAGA,
-      payload: { data: { email }, navigate },
+      payload: { data: values, navigate },
     });
   };
 

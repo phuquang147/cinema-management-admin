@@ -1,8 +1,11 @@
 import Axios from "axios";
+import { EmailFormData } from "~/components/ForgotPassword/EmailForm";
+import { ResetPasswordFormData } from "~/components/ForgotPassword/ResetForm";
+import { LoginFormData } from "~/components/Login/LoginForm";
 import { URL_FORGOT_PASSWORD, URL_LOGIN, URL_RESET_PASSWORD } from "./apiUrls";
 
 const AuthServices = {
-  login: (data: any) => {
+  login: (data: LoginFormData) => {
     return Axios({
       url: URL_LOGIN,
       method: "POST",
@@ -10,7 +13,7 @@ const AuthServices = {
     });
   },
 
-  resetPassword: (data: any) => {
+  resetPassword: (data: EmailFormData) => {
     return Axios({
       url: URL_FORGOT_PASSWORD,
       method: "POST",
@@ -18,7 +21,7 @@ const AuthServices = {
     });
   },
 
-  changePassword: (data: any) => {
+  changePassword: (data: ResetPasswordFormData) => {
     return Axios({
       url: URL_RESET_PASSWORD,
       method: "POST",

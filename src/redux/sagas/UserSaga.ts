@@ -1,11 +1,18 @@
 import Cookies from "js-cookie";
+import { NavigateFunction } from "react-router-dom";
 import { toast } from "react-toastify";
 import { call, put, takeLatest } from "redux-saga/effects";
+import { EmailFormData } from "~/components/ForgotPassword/EmailForm";
+import { ResetPasswordFormData } from "~/components/ForgotPassword/ResetForm";
+import { LoginFormData } from "~/components/Login/LoginForm";
 import AuthServices from "~/services/authServices";
 import { getUser } from "../reducers/UserReducer";
 import { authSagaActionTypes } from "../sagaActionTypes";
 
-function* workLogin(action: any) {
+function* workLogin(action: {
+  payload: { data: LoginFormData; navigate: NavigateFunction };
+  type: string;
+}) {
   const { data: payloadData, navigate } = action.payload;
 
   try {
@@ -16,6 +23,7 @@ function* workLogin(action: any) {
       const remainingMilliseconds = 60 * 60 * 1000;
       const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
       Cookies.set("token", data.token, { expires: expiryDate });
+      Cookies.set("user", JSON.stringify(data.user), { expires: expiryDate });
       navigate("/", { replace: true });
       yield put(getUser(data.user));
     }
@@ -24,7 +32,10 @@ function* workLogin(action: any) {
   }
 }
 
-function* workResetPassword(action: any) {
+function* workResetPassword(action: {
+  payload: { data: EmailFormData; navigate: NavigateFunction };
+  type: string;
+}) {
   const { data: payloadData, navigate } = action.payload;
 
   try {
@@ -38,7 +49,10 @@ function* workResetPassword(action: any) {
   }
 }
 
-function* workChangePassword(action: any) {
+function* workChangePassword(action: {
+  payload: { data: ResetPasswordFormData; navigate: NavigateFunction };
+  type: string;
+}) {
   const { data: payloadData, navigate } = action.payload;
 
   try {

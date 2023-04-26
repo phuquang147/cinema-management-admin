@@ -11,6 +11,12 @@ import Iconify from "~/components/Iconify";
 import { useAppDispatch } from "~/redux/hooks";
 import { authSagaActionTypes } from "~/redux/sagaActionTypes";
 
+export interface ResetPasswordFormData {
+  password: string;
+  passwordToken: string;
+  accountId: string;
+}
+
 export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

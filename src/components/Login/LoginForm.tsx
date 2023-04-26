@@ -11,6 +11,11 @@ import Iconify from "~/components/Iconify";
 import { useAppDispatch } from "~/redux/hooks";
 import { authSagaActionTypes } from "~/redux/sagaActionTypes";
 
+export interface LoginFormData {
+  username: string;
+  password: string;
+}
+
 export default function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -27,7 +32,7 @@ export default function LoginForm() {
     password: "",
   };
 
-  const methods = useForm({
+  const methods = useForm<LoginFormData>({
     resolver: yupResolver(LoginSchema),
     defaultValues,
   });
@@ -37,7 +42,7 @@ export default function LoginForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: LoginFormData) => {
     dispatch({
       type: authSagaActionTypes.LOGIN_SAGA,
       payload: { data: values, navigate },
