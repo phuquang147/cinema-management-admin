@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { call, put, takeLatest } from "redux-saga/effects";
+import { GenreFormData } from "~/components/Settings/GenreForm";
 import GenreServices from "~/services/genreServices";
 import { getGenres } from "../reducers/GenreReducer";
 import { genreSagaActionTypes } from "../sagaActionTypes";
@@ -15,7 +16,10 @@ function* workGetGenres() {
   }
 }
 
-function* workAddGenre(action: any) {
+function* workAddGenre(action: {
+  payload: { genre: GenreFormData; handleCloseModal: () => void };
+  type: string;
+}) {
   const { genre, handleCloseModal } = action.payload;
 
   try {
@@ -31,7 +35,10 @@ function* workAddGenre(action: any) {
   }
 }
 
-function* workUpdateGenre(action: any) {
+function* workUpdateGenre(action: {
+  payload: { genre: GenreFormData; handleCloseModal: () => void };
+  type: string;
+}) {
   const { genre, handleCloseModal } = action.payload;
 
   try {
@@ -40,14 +47,17 @@ function* workUpdateGenre(action: any) {
     if (status === 200) {
       yield put(getGenres({ genres: data.genres }));
       toast.success(data.message);
-      handleCloseModal(handleCloseModal);
+      handleCloseModal();
     }
   } catch (err: any) {
     toast.error(err.response.data.message);
   }
 }
 
-function* workDeleteGenre(action: any) {
+function* workDeleteGenre(action: {
+  payload: { id: string; handleCloseModal: () => void };
+  type: string;
+}) {
   const { id } = action.payload;
 
   try {

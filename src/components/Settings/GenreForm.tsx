@@ -15,6 +15,11 @@ interface GenreFormProps {
   handleCloseModal: () => void;
 }
 
+export interface GenreFormData {
+  id: string;
+  name: string;
+}
+
 const GenreForm: React.FC<GenreFormProps> = ({
   type = "new",
   genre,
@@ -30,7 +35,7 @@ const GenreForm: React.FC<GenreFormProps> = ({
     name: genre ? genre.name : "",
   };
 
-  const methods = useForm({
+  const methods = useForm<GenreFormData>({
     resolver: yupResolver(StaffSchema),
     defaultValues,
   });
