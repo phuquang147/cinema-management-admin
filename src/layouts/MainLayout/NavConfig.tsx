@@ -60,6 +60,11 @@ const navConfig: INavConfig[] = [
     icon: getIcon("bi:file-post"),
   },
   {
+    title: "Giao dịch",
+    path: "/giao-dich",
+    icon: getIcon("solar:bill-list-outline"),
+  },
+  {
     title: "Báo cáo",
     path: "/bao-cao",
     icon: getIcon("iconoir:stats-report"),

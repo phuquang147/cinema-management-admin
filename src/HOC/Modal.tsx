@@ -1,4 +1,11 @@
-import { Dialog, DialogTitle, Divider, IconButton, Stack } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import { ReactNode } from "react";
 import Iconify from "~/components/Iconify";
 
@@ -12,19 +19,14 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ title, children, open, onClose }) => {
   return (
     <Dialog maxWidth="sm" onClose={onClose} open={open}>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        py={1}
-      >
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
         <DialogTitle>{title || ""}</DialogTitle>
-        <IconButton sx={{ mr: 2 }} onClick={onClose}>
+        <IconButton sx={{ mr: 2 }} color="primary" onClick={onClose}>
           <Iconify icon="ic:round-close"></Iconify>
         </IconButton>
       </Stack>
       <Divider />
-      {children}
+      <DialogContent>{children}</DialogContent>
     </Dialog>
   );
 };

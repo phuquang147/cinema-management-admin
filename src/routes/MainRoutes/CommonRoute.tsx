@@ -29,6 +29,8 @@ import NewStaff from "~/pages/Staffs/NewStaff";
 import Posts from "~/pages/Posts";
 import EditPost from "~/pages/Posts/EditPost";
 import NewPost from "~/pages/Posts/NewPost";
+// Giao dịch
+import Transactions from "~/pages/Transactions";
 // Cài đặt chung
 import Genres from "~/pages/Settings/Genres";
 import RoomTypes from "~/pages/Settings/RoomTypes";
@@ -125,6 +127,11 @@ const CommonRoutes: RouteObject[] = [
   {
     path: "/bai-viet/:id",
     element: <EditPost />,
+  },
+  // Giao dịch
+  {
+    path: "/giao-dich",
+    element: <Transactions />,
   },
   // Cài đặt chung
   {

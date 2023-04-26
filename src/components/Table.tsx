@@ -5,6 +5,7 @@ import { DATA_GRID_DEFAULT_LOCALE_TEXT } from "~/utils/datagrid-default-locale-t
 interface TableProps {
   columns: any[];
   rows: any[];
+  [x: string]: any;
 }
 const Table: React.FC<TableProps> = ({ columns, rows, ...other }) => {
   const [pageSize, setPageSize] = useState(10);
