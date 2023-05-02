@@ -63,3 +63,12 @@ export const URL_GET_ROOM_BY_ID = (id: string) => `${DOMAIN_NAME}/rooms/${id}`;
 export const URL_ADD_ROOM = `${DOMAIN_NAME}/rooms`;
 export const URL_UPDATE_ROOM = (id: string) => `${DOMAIN_NAME}/rooms/${id}`;
 export const URL_DELETE_ROOM = (id: string) => `${DOMAIN_NAME}/rooms/${id}`;
+
+//SHOW TIME
+export const URL_GET_SHOW_TIMES_BY_DATE = (date: string) =>
+  `${DOMAIN_NAME}/show-times?date=${date}`;
+export const URL_ADD_SHOW_TIME = `${DOMAIN_NAME}/show-times`;
+export const URL_UPDATE_SHOW_TIME = (id: string) =>
+  `${DOMAIN_NAME}/show-times/${id}`;
+export const URL_DELETE_SHOW_TIME = (id: string) =>
+  `${DOMAIN_NAME}/show-times/${id}`;

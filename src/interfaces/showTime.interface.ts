@@ -1,6 +1,10 @@
 export default interface IShowTime {
-  id: string;
-  startTime: Date;
-  room: string;
-  movie: string;
+  _id: string;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  room: { _id: string; name: string; duration: number };
+  movie: { _id: string; name: string };
+  singlePrice: number;
+  doublePrice: number;
 }
