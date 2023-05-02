@@ -45,7 +45,7 @@ const GenreForm: React.FC<GenreFormProps> = ({
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: GenreFormData) => {
     if (type === "new") {
       dispatch({
         type: genreSagaActionTypes.ADD_GENRE_SAGA,
