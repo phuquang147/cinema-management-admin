@@ -5,7 +5,7 @@ import ActionsMenu from "~/components/ActionsMenu";
 import Table from "~/components/Table";
 import TransactionDetail from "~/components/Transactions/TransactionDetail";
 import Transaction from "~/interfaces/transaction.interface";
-import { ISOToDateTime } from "~/utils/formatDateTime";
+import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
 
 const transactions: Transaction[] = [
@@ -68,6 +68,7 @@ const columns = [
             fontSize: "13px",
             fontWeight: "bold",
             width: "100px",
+            borderRadius: "4px",
           }}
         />
       );
@@ -102,7 +103,7 @@ const columns = [
     minWidth: 170,
     renderCell: (params: GridRowParams) => {
       const { row } = params;
-      return <Typography>{ISOToDateTime(row.showTime)}</Typography>;
+      return <Typography>{ISOToDateTimeFormat(row.showTime)}</Typography>;
     },
   },
   {
@@ -114,7 +115,7 @@ const columns = [
     minWidth: 170,
     renderCell: (params: GridRowParams) => {
       const { row } = params;
-      return <Typography>{ISOToDateTime(row.showTime)}</Typography>;
+      return <Typography>{ISOToDateTimeFormat(row.showTime)}</Typography>;
     },
   },
   {

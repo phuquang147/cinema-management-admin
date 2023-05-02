@@ -1,7 +1,7 @@
 import { Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
 import Modal from "~/HOC/Modal";
 import Transaction from "~/interfaces/transaction.interface";
-import { ISOToDateTime } from "~/utils/formatDateTime";
+import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
 
 type TransactionDetailProps = {
@@ -73,6 +73,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
               fontSize: "13px",
               fontWeight: "bold",
               width: "100px",
+              borderRadius: "4px",
             }}
           />
         </Grid>
@@ -90,7 +91,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{ISOToDateTime(transaction.showTime)}</Typography>
+          <Typography>{ISOToDateTimeFormat(transaction.showTime)}</Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -98,7 +99,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{ISOToDateTime(transaction.bookTime)}</Typography>
+          <Typography>{ISOToDateTimeFormat(transaction.bookTime)}</Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
