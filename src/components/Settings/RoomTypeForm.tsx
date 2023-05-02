@@ -9,6 +9,11 @@ import IRoomType from "~/interfaces/roomType.interface";
 import { useAppDispatch } from "~/redux/hooks";
 import { roomTypeSagaActionTypes } from "~/redux/sagaActionTypes";
 
+export interface RoomTypeFormData {
+  id: string;
+  name: string;
+}
+
 interface RoomTypeFormProps {
   type?: "new" | "edit";
   roomType?: IRoomType;
@@ -30,7 +35,7 @@ const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
     name: roomType ? roomType.name : "",
   };
 
-  const methods = useForm({
+  const methods = useForm<RoomTypeFormData>({
     resolver: yupResolver(StaffSchema),
     defaultValues,
   });
@@ -40,7 +45,7 @@ const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: RoomTypeFormData) => {
     if (type === "new")
       dispatch({
         type: roomTypeSagaActionTypes.ADD_ROOM_TYPE_SAGA,

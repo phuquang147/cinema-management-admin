@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { call, put, takeLatest } from "redux-saga/effects";
+import { RoomTypeFormData } from "~/components/Settings/RoomTypeForm";
 import RoomTypeServices from "~/services/roomTypeServices";
 import { getRoomTypes } from "../reducers/RoomTypeReducer";
 import { roomTypeSagaActionTypes } from "../sagaActionTypes";
@@ -15,7 +16,10 @@ function* workGetRoomTypes() {
   }
 }
 
-function* workAddRoomType(action: any) {
+function* workAddRoomType(action: {
+  payload: { roomType: RoomTypeFormData; handleCloseModal: () => void };
+  type: string;
+}) {
   const { roomType, handleCloseModal } = action.payload;
 
   try {
@@ -33,7 +37,10 @@ function* workAddRoomType(action: any) {
   }
 }
 
-function* workUpdateRoomType(action: any) {
+function* workUpdateRoomType(action: {
+  payload: { roomType: RoomTypeFormData; handleCloseModal: () => void };
+  type: string;
+}) {
   const { roomType, handleCloseModal } = action.payload;
 
   try {
@@ -44,14 +51,17 @@ function* workUpdateRoomType(action: any) {
     if (status === 200) {
       yield put(getRoomTypes({ roomTypes: data.roomTypes }));
       toast.success(data.message);
-      handleCloseModal(handleCloseModal);
+      handleCloseModal();
     }
   } catch (err: any) {
     toast.error(err.response.data.message);
   }
 }
 
-function* workDeleteRoomType(action: any) {
+function* workDeleteRoomType(action: {
+  payload: { id: string };
+  type: string;
+}) {
   const { id } = action.payload;
 
   try {

@@ -1,4 +1,5 @@
 import { Button, Card, Container, Stack, Typography } from "@mui/material";
+import { GridRowParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import ActionsMenu from "~/components/ActionsMenu";
 import Iconify from "~/components/Iconify";
@@ -17,7 +18,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 250,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       return (
         <Typography variant="subtitle2" noWrap textAlign="start">
@@ -37,7 +38,7 @@ const columns = [
     filterable: false,
     minWidth: 180,
     flex: 1,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { handleOpenDetail, handleEdit, handleDelete, ...roomType } =
         params.row;
 
