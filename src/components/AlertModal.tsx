@@ -1,4 +1,4 @@
-import { Box, Button, DialogContent } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import MuiTypography from "@mui/material/Typography";
 import Modal from "~/HOC/Modal";
 
@@ -17,24 +17,22 @@ const AlertModal: React.FC<AlertModalProps> = ({
 }) => {
   return (
     <Modal open={open} onClose={onClose}>
-      <DialogContent>
-        <MuiTypography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
-          {content}
-        </MuiTypography>
-        <Box sx={{ display: "flex", justifyContent: "end" }}>
-          <Button onClick={onClose} color="error" sx={{ mr: 1 }}>
-            Huỷ
-          </Button>
-          <Button
-            type="submit"
-            variant="outlined"
-            color="info"
-            onClick={onAccept}
-          >
-            Xác nhận
-          </Button>
-        </Box>
-      </DialogContent>
+      <MuiTypography variant="subtitle1" gutterBottom sx={{ mb: 2 }}>
+        {content}
+      </MuiTypography>
+      <Box sx={{ display: "flex", justifyContent: "end" }}>
+        <Button onClick={onClose} color="error" sx={{ mr: 1 }}>
+          Huỷ
+        </Button>
+        <Button
+          type="submit"
+          variant="outlined"
+          color="info"
+          onClick={onAccept}
+        >
+          Xác nhận
+        </Button>
+      </Box>
     </Modal>
   );
 };

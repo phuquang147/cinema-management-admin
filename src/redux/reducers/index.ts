@@ -5,6 +5,7 @@ import MovieReducer from "./MovieReducer";
 import PostReducer from "./PostReducer";
 import RoomReducer from "./RoomReducer";
 import RoomTypeReducer from "./RoomTypeReducer";
+import ShowTimeReducer from "./ShowTimeReducer";
 import SnackReducer from "./SnackReducer";
 import StaffReducer from "./StaffReducer";
 import UserReducer from "./UserReducer";
@@ -20,6 +21,7 @@ const rootReducer = {
   staff: StaffReducer,
   post: PostReducer,
   room: RoomReducer,
+  showTime: ShowTimeReducer,
 };
 
 export default rootReducer;

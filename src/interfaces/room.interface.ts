@@ -1,5 +1,9 @@
+import IRoomType from "./roomType.interface";
+import { ISeat } from "./seat.interface";
+
 export default interface IRoom {
-  id: string;
+  _id: string;
   name: string;
-  roomTypes: string[];
+  roomType: IRoomType;
+  seats: ISeat[][];
 }

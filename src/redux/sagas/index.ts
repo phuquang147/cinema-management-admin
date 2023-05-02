@@ -9,6 +9,7 @@ import * as RoomTypeSaga from "./RoomTypeSaga";
 import * as SnackSaga from "./SnackSaga";
 import * as StaffSaga from "./StaffSaga";
 import * as UserSaga from "./UserSaga";
+import * as ShowTimeSaga from "./ShowTimeSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -60,6 +61,12 @@ export default function* rootSaga() {
     RoomSaga.updateRoomSaga(),
     RoomSaga.deleteRoomSaga(),
     RoomSaga.getDataForRoomSaga(),
+    //Show time
+    ShowTimeSaga.getShowTimesByDateSaga(),
+    ShowTimeSaga.addShowTimeSaga(),
+    ShowTimeSaga.updateShowTimeSaga(),
+    ShowTimeSaga.deleteShowTimeSaga(),
+    ShowTimeSaga.getDataForShowTimeSaga(),
     //Image
     ImageSaga.postImageSaga(),
   ]);
