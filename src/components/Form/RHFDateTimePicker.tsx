@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { KeyboardEvent } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface RHFDateTimePickerProps {
@@ -25,7 +26,15 @@ const RHFDateTimePicker: React.FC<RHFDateTimePickerProps> = ({
           <DateTimePicker
             {...field}
             value={field.value}
-            renderInput={(params) => <TextField {...params} fullWidth />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                  e.preventDefault();
+                }}
+              />
+            )}
             {...other}
           />
         </LocalizationProvider>

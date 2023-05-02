@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material";
-import React from "react";
+import React, { KeyboardEvent } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface RHFAutocompleteProps {
@@ -52,6 +52,9 @@ const RHFAutocomplete: React.FC<RHFAutocompleteProps> = ({
                 value={field.value}
                 error={!!error}
                 helperText={error?.message}
+                onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                  e.preventDefault();
+                }}
               />
             )}
             {...other}
