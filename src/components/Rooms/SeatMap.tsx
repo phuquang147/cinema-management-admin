@@ -14,10 +14,11 @@ import ContextMenuContainer from "../ContextMenu/ContextMenuContainer";
 import { useDragSelect } from "../DragSelectProvider";
 import Seat from "./Seat";
 import { toast } from "react-toastify";
+import { NewSeat } from "./RoomForm";
 
 interface SeatMapProps {
-  seats: (ISeat | string)[][];
-  onUpdateSeats: (seats: (ISeat | string)[][]) => void;
+  seats: (ISeat | NewSeat)[][];
+  onUpdateSeats: (seats: (ISeat | NewSeat)[][]) => void;
 }
 
 type SelectEvent = {
@@ -55,34 +56,45 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, onUpdateSeats }) => {
     };
   }, [ds]);
 
+  const getSeatType = (seat: ISeat | NewSeat) => {
+    return seat.hasOwnProperty("_id")
+      ? (seat as ISeat).seatId.type
+      : (seat as NewSeat).type;
+  };
+
+  const getSeatPosition = (seat: ISeat | NewSeat) => {
+    return seat.hasOwnProperty("_id")
+      ? (seat as ISeat).seatId.position
+      : (seat as NewSeat).position;
+  };
+
   const handleChangeSeatToNoneOrSingle = (type: "none" | "single") => {
-    const newSeats = [...seats];
+    const newSeats = seats.map((seatsRow) => [...seatsRow]);
 
     const handleChangeSeatType = (row: number, col: number) => {
-      if (typeof newSeats[row][col] === "string") {
-        newSeats[row][col] =
-          type === "none" ? SEAT_TYPES.NONE : SEAT_TYPES.SINGLE;
-      } else {
+      if (newSeats[row][col].hasOwnProperty("_id")) {
         newSeats[row][col] = {
-          ...(newSeats[row][col] as ISeat),
+          ...newSeats[row][col],
           seatId: {
             ...(newSeats[row][col] as ISeat).seatId,
             type: type === "none" ? SEAT_TYPES.NONE : SEAT_TYPES.SINGLE,
           },
         };
+      } else {
+        newSeats[row][col] = {
+          type: type === "none" ? SEAT_TYPES.NONE : SEAT_TYPES.SINGLE,
+        };
       }
     };
 
     const handleChangeRelatedDoubleSeat = (row: number, col: number) => {
-      const seatType =
-        typeof newSeats[row][col] === "string"
-          ? newSeats[row][col]
-          : (newSeats[row][col] as ISeat).seatId.type;
+      const seatType = getSeatType(newSeats[row][col]);
+      const seatPosition = getSeatPosition(newSeats[row][col]);
 
-      if (seatType === SEAT_TYPES.MAIN_DOUBLE)
+      if (seatType === SEAT_TYPES.DOUBLE && seatPosition === "left")
         handleChangeSeatType(row, col + 1);
-
-      if (seatType === SEAT_TYPES.DOUBLE) handleChangeSeatType(row, col - 1);
+      if (seatType === SEAT_TYPES.DOUBLE && seatPosition === "right")
+        handleChangeSeatType(row, col - 1);
     };
 
     if (selectEvent && selectEvent?.items.length > 0) {
@@ -105,9 +117,6 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, onUpdateSeats }) => {
   };
 
   const handleChangeSeatToDouble = () => {
-    const getSeatType = (seat: ISeat | string) => {
-      return typeof seat === "string" ? seat : (seat as ISeat).seatId.type;
-    };
     if (
       selectEvent?.items.length === 2 &&
       selectEvent.items[0].dataset.row === selectEvent.items[1].dataset.row &&
@@ -123,39 +132,37 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, onUpdateSeats }) => {
 
       const seatType1 = getSeatType(seats[row1][col1]);
       const seatType2 = getSeatType(seats[row2][col2]);
-      if (
-        seatType1 === SEAT_TYPES.DOUBLE ||
-        seatType1 === SEAT_TYPES.MAIN_DOUBLE ||
-        seatType2 === SEAT_TYPES.DOUBLE ||
-        seatType2 === SEAT_TYPES.MAIN_DOUBLE
-      ) {
+      if (seatType1 === SEAT_TYPES.DOUBLE || seatType2 === SEAT_TYPES.DOUBLE) {
         toast.error("Vui lòng chọn các ghế không phải là ghế đôi");
       } else {
-        const newSeats = [...seats];
+        const newSeats = seats.map((seatsRow) => [...seatsRow]);
 
         const handleChangeSeatType = (
           row: number,
           col: number,
-          type: string
+          type: string,
+          position?: "left" | "right"
         ) => {
-          if (typeof newSeats[row][col] === "string") newSeats[row][col] = type;
-          else {
+          if (newSeats[row][col].hasOwnProperty("_id"))
             newSeats[row][col] = {
               ...(newSeats[row][col] as ISeat),
               seatId: {
                 ...(newSeats[row][col] as ISeat).seatId,
                 type,
+                position: position ? position : "left",
               },
             };
+          else {
+            newSeats[row][col] = { type, position };
           }
         };
 
         if (col1 < col2) {
-          handleChangeSeatType(row1, col1, SEAT_TYPES.MAIN_DOUBLE);
-          handleChangeSeatType(row2, col2, SEAT_TYPES.DOUBLE);
+          handleChangeSeatType(row1, col1, SEAT_TYPES.DOUBLE, "left");
+          handleChangeSeatType(row2, col2, SEAT_TYPES.DOUBLE, "right");
         } else {
-          handleChangeSeatType(row1, col1, SEAT_TYPES.DOUBLE);
-          handleChangeSeatType(row2, col2, SEAT_TYPES.MAIN_DOUBLE);
+          handleChangeSeatType(row1, col1, SEAT_TYPES.DOUBLE, "right");
+          handleChangeSeatType(row2, col2, SEAT_TYPES.DOUBLE, "left");
         }
 
         onUpdateSeats(newSeats);

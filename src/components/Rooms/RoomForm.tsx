@@ -29,11 +29,16 @@ interface RoomFormProps {
   room?: IRoom | null;
 }
 
+export type NewSeat = {
+  type: string;
+  position?: "left" | "right";
+};
+
 const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [seats, setSeats] = useState<(ISeat | string)[][]>([]);
+  const [seats, setSeats] = useState<(ISeat | NewSeat)[][]>([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
   const roomTypes = useAppSelector((state) => state.roomType.roomTypes);
   const isSeatModified = useRef<boolean>(false);
@@ -61,6 +66,8 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
   } = methods;
 
   const onSubmit = async (values: any) => {
+    console.log(seats);
+
     if (type === "new") {
       dispatch({
         type: roomSagaActionTypes.ADD_ROOM_SAGA,
@@ -70,25 +77,6 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
         },
       });
     } else {
-      const mappedSeats = seats.map((seatRow) => {
-        return seatRow.map((seat) => {
-          if (typeof seat === "string") {
-            if (seat === SEAT_TYPES.MAIN_DOUBLE) return SEAT_TYPES.DOUBLE;
-          } else {
-            if ((seat as ISeat).seatId.type === SEAT_TYPES.MAIN_DOUBLE)
-              return {
-                ...seat,
-                seatId: {
-                  ...seat.seatId,
-                  type: SEAT_TYPES.DOUBLE,
-                },
-              };
-          }
-
-          return seat;
-        });
-      });
-
       dispatch({
         type: roomSagaActionTypes.UPDATE_ROOM_SAGA,
         payload: {
@@ -96,7 +84,7 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
             ...values,
             id: room?._id,
             roomType: values.roomType._id,
-            seats: mappedSeats,
+            seats,
             isSeatModified: isSeatModified.current,
           },
           navigate,
@@ -109,8 +97,8 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
     setSeats((prevSeats) => {
       const newRow =
         prevSeats[0] && prevSeats[0].length > 0
-          ? new Array(prevSeats[0].length).fill(SEAT_TYPES.SINGLE)
-          : [SEAT_TYPES.SINGLE];
+          ? new Array(prevSeats[0].length).fill({ type: SEAT_TYPES.SINGLE })
+          : [{ type: SEAT_TYPES.SINGLE }];
       return [...prevSeats, newRow];
     });
     isSeatModified.current = true;
@@ -118,9 +106,9 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
 
   const handleAddCol = () => {
     setSeats((prevSeats) => {
-      const newSeats = [...prevSeats];
-      for (const seatRow of seats) {
-        seatRow.push(SEAT_TYPES.SINGLE);
+      const newSeats = prevSeats.map((seatsRow) => [...seatsRow]);
+      for (const seatRow of newSeats) {
+        seatRow.push({ type: SEAT_TYPES.SINGLE });
       }
       return newSeats;
     });
@@ -144,13 +132,13 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
       return prevSeats.map((seatRow) => {
         const newSeatRow = [...seatRow];
         const lastSeat = newSeatRow.splice(-1);
-        if (typeof lastSeat[0] === "string") {
-          if (lastSeat[0] === SEAT_TYPES.DOUBLE)
-            newSeatRow[newSeatRow.length - 1] = SEAT_TYPES.SINGLE;
-        } else {
+        if (lastSeat[0].hasOwnProperty("_id")) {
           if ((lastSeat[0] as ISeat).seatId.type === SEAT_TYPES.DOUBLE)
             (newSeatRow[newSeatRow.length - 1] as ISeat).seatId.type =
               SEAT_TYPES.SINGLE;
+        } else {
+          if ((lastSeat[0] as NewSeat).type === SEAT_TYPES.DOUBLE)
+            newSeatRow[newSeatRow.length - 1] = { type: SEAT_TYPES.SINGLE };
         }
         return newSeatRow;
       });
@@ -158,7 +146,7 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
     isSeatModified.current = true;
   };
 
-  const handleUpdateSeats = (seats: (ISeat | string)[][]) => {
+  const handleUpdateSeats = (seats: (ISeat | NewSeat)[][]) => {
     setSeats(seats);
     isSeatModified.current = true;
   };
@@ -169,27 +157,7 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
 
   useEffect(() => {
     if (room && room.seats) {
-      const markArray = new Array(room.seats.length).fill(false);
-      const mappedSeats = room.seats.map((seatRow, rowIndex) => {
-        return seatRow.map((seat) => {
-          if (seat.seatId.type === SEAT_TYPES.DOUBLE)
-            if (!markArray[rowIndex]) {
-              markArray[rowIndex] = true;
-              return {
-                ...seat,
-                seatId: {
-                  ...seat.seatId,
-                  type: SEAT_TYPES.MAIN_DOUBLE,
-                },
-              };
-            } else {
-              markArray[rowIndex] = false;
-            }
-          return { ...seat };
-        });
-      });
-
-      setSeats(mappedSeats);
+      setSeats(room.seats);
     }
   }, [room]);
 

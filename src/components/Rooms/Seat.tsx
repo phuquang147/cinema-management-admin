@@ -3,15 +3,22 @@ import { useEffect, useRef } from "react";
 import { SEAT_TYPES } from "~/constants";
 import { ISeat } from "~/interfaces/seat.interface";
 import { useDragSelect } from "../DragSelectProvider";
+import { NewSeat } from "./RoomForm";
 
 interface SeatProps {
-  seat: ISeat | string;
+  seat: ISeat | NewSeat;
   row: number;
   col: number;
 }
 
 const Seat: React.FC<SeatProps> = ({ seat, row, col }) => {
-  const seatType = typeof seat === "string" ? seat : seat.seatId.type;
+  const seatType = seat.hasOwnProperty("_id")
+    ? (seat as ISeat).seatId.type
+    : (seat as NewSeat).type;
+
+  const position = seat.hasOwnProperty("_id")
+    ? (seat as ISeat).seatId.position
+    : (seat as NewSeat).position;
   const ds = useDragSelect();
   const inputEl = useRef(null);
 
@@ -38,8 +45,9 @@ const Seat: React.FC<SeatProps> = ({ seat, row, col }) => {
           data-col={col}
         ></ButtonBase>
       );
-    case SEAT_TYPES.MAIN_DOUBLE:
-      return (
+
+    case SEAT_TYPES.DOUBLE:
+      return position === "left" ? (
         <ButtonBase
           ref={inputEl}
           sx={{
@@ -54,9 +62,7 @@ const Seat: React.FC<SeatProps> = ({ seat, row, col }) => {
           data-row={row}
           data-col={col}
         ></ButtonBase>
-      );
-    case SEAT_TYPES.DOUBLE:
-      return (
+      ) : (
         <ButtonBase
           ref={inputEl}
           sx={{
