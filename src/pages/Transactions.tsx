@@ -1,24 +1,14 @@
 import { Card, Chip, Container, Stack, Typography } from "@mui/material";
 import { GridRowParams } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActionsMenu from "~/components/ActionsMenu";
 import Table from "~/components/Table";
 import TransactionDetail from "~/components/Transactions/TransactionDetail";
-import Transaction from "~/interfaces/transaction.interface";
+import ITransaction from "~/interfaces/transaction.interface";
+import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import { transactionSagaActionTypes } from "~/redux/sagaActionTypes";
 import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
-
-const transactions: Transaction[] = [
-  {
-    _id: "tran1",
-    name: "Phu Quang",
-    movieName: "Fast and Furious",
-    showTime: new Date().toISOString(),
-    bookTime: new Date().toISOString(),
-    seats: ["A1", "A2", "A3", "A4"],
-    total: 500000,
-  },
-];
 
 const columns = [
   {
@@ -36,7 +26,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
       return (
         <Typography
@@ -44,21 +34,35 @@ const columns = [
           textAlign="start"
           sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
         >
-          {row.name}
+          {row.staff ? row.staff.name : row.customer?.name}
         </Typography>
       );
     },
   },
   {
     field: "abc",
-    headerName: "Loại người đặt",
+    headerName: "Người đặt",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
-      return (
+
+      return row.staff ? (
+        <Chip
+          label="Nhân viên"
+          color="success"
+          sx={{
+            bgcolor: "success.light",
+            color: "success.dark",
+            fontSize: "13px",
+            fontWeight: "bold",
+            width: "100px",
+            borderRadius: "4px",
+          }}
+        />
+      ) : (
         <Chip
           label="Khách hàng"
           color="info"
@@ -81,7 +85,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 180,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
       return (
         <Typography
@@ -89,21 +93,23 @@ const columns = [
           textAlign="start"
           sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
         >
-          {row.movieName}
+          {row.showTime.movie}
         </Typography>
       );
     },
   },
   {
     field: "showTime",
-    headerName: "Xuất chiếu",
+    headerName: "Suất chiếu",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 170,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
-      return <Typography>{ISOToDateTimeFormat(row.showTime)}</Typography>;
+      return (
+        <Typography>{ISOToDateTimeFormat(row.showTime.startTime)}</Typography>
+      );
     },
   },
   {
@@ -113,9 +119,9 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 170,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
-      return <Typography>{ISOToDateTimeFormat(row.showTime)}</Typography>;
+      return <Typography>{ISOToDateTimeFormat(row.createdAt)}</Typography>;
     },
   },
   {
@@ -125,11 +131,11 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 160,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
       return (
         <Typography sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-          {row.seats.join(", ")}
+          {row.tickets.map((ticket) => ticket.seat.name).join(", ")}
         </Typography>
       );
     },
@@ -141,11 +147,11 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 150,
-    renderCell: (params: GridRowParams) => {
+    renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
       return (
         <Typography fontWeight={800} color="primary">
-          {printNumberWithCommas(row.total)} VNĐ
+          {printNumberWithCommas(row.totalPrice)} VNĐ
         </Typography>
       );
     },
@@ -178,32 +184,28 @@ const columns = [
 ];
 
 const Transactions: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { transactions } = useAppSelector((state) => state.transaction);
   const [transactionDetail, setTransactionDetail] =
-    useState<Transaction | null>(null);
+    useState<ITransaction | null>(null);
 
-  const handleOpenTransactionDetail = (transaction: Transaction) => {
+  const handleOpenTransactionDetail = (transaction: ITransaction) => {
     setTransactionDetail(transaction);
   };
 
   const handleCloseTransactionDetail = () => {
     setTransactionDetail(null);
   };
-  //   const dispatch = useAppDispatch();
-  //   const actors = useAppSelector((state) => state.actor.actors);
 
-  const mappedRows = transactions.map((transaction: Transaction) => ({
+  const mappedRows = transactions.map((transaction: ITransaction) => ({
     ...transaction,
     id: transaction._id,
     handleOpenDetail: handleOpenTransactionDetail,
   }));
 
-  //   useEffect(() => {
-  //     dispatch({ type: actorSagaActionTypes.GET_ACTORS_SAGA });
-  //   }, [dispatch]);
-
-  const handleShowTransactionDetail = (a: any) => {
-    console.log(a);
-  };
+  useEffect(() => {
+    dispatch({ type: transactionSagaActionTypes.GET_TRANSACTIONS_SAGA });
+  }, [dispatch]);
 
   return (
     <Container>
@@ -227,14 +229,11 @@ const Transactions: React.FC = () => {
           },
         }}
       >
-        <Table
-          rows={mappedRows}
-          columns={columns}
-          onRowClick={handleShowTransactionDetail}
-        />
+        <Table rows={mappedRows} columns={columns} />
       </Card>
       <TransactionDetail
         open={!!transactionDetail}
+        transaction={transactionDetail}
         onClose={handleCloseTransactionDetail}
       />
     </Container>

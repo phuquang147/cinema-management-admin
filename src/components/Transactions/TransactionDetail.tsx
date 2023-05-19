@@ -1,40 +1,26 @@
-import { Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import Modal from "~/HOC/Modal";
-import Transaction from "~/interfaces/transaction.interface";
+import ITransaction from "~/interfaces/transaction.interface";
 import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
 
 type TransactionDetailProps = {
   open: boolean;
-  // staff: IStaff | null;
+  transaction: ITransaction | null;
   onClose: () => void;
-};
-
-const transaction: Transaction = {
-  _id: "tran1",
-  name: "Phu Quang",
-  movieName: "Fast and Furious",
-  showTime: new Date().toISOString(),
-  bookTime: new Date().toISOString(),
-  seats: [
-    "A1",
-    "A2asdasdasd",
-    "A3asdasdas",
-    "A4asdasds",
-    "A5sdfsdfs",
-    "A6",
-    "A7",
-    "A8",
-  ],
-  snacks: [
-    { id: "rasdasd", name: "Combo bắp nước lớn asd", price: 50000 },
-    { id: "rasdad", name: "Combo bắp nước lớn", price: 50000 },
-  ],
-  total: 500000,
 };
 
 const TransactionDetail: React.FC<TransactionDetailProps> = ({
   open,
+  transaction,
   onClose,
 }) => {
   const theme = useTheme();
@@ -48,7 +34,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{transaction._id}</Typography>
+          <Typography>{transaction ? transaction._id : ""}</Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -56,26 +42,45 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{transaction.name}</Typography>
+          <Typography>
+            {transaction && transaction.staff
+              ? transaction.staff.name
+              : transaction?.customer?.name}
+          </Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
-            Loại người đặt:
+            Người đặt:
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Chip
-            label="Khách hàng"
-            color="info"
-            sx={{
-              bgcolor: "info.light",
-              color: "info.dark",
-              fontSize: "13px",
-              fontWeight: "bold",
-              width: "100px",
-              borderRadius: "4px",
-            }}
-          />
+          {transaction && transaction.customer ? (
+            <Chip
+              label="Khách hàng"
+              color="info"
+              sx={{
+                bgcolor: "info.light",
+                color: "info.dark",
+                fontSize: "13px",
+                fontWeight: "bold",
+                width: "100px",
+                borderRadius: "4px",
+              }}
+            />
+          ) : (
+            <Chip
+              label="Nhân viên"
+              color="success"
+              sx={{
+                bgcolor: "success.light",
+                color: "success.dark",
+                fontSize: "13px",
+                fontWeight: "bold",
+                width: "100px",
+                borderRadius: "4px",
+              }}
+            />
+          )}
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -83,7 +88,9 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{transaction.movieName}</Typography>
+          <Typography>
+            {transaction ? transaction.showTime.movie : ""}
+          </Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -91,7 +98,13 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{ISOToDateTimeFormat(transaction.showTime)}</Typography>
+          <Typography>
+            {ISOToDateTimeFormat(
+              transaction
+                ? transaction.showTime.startTime
+                : new Date().toISOString()
+            )}
+          </Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -99,7 +112,11 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{ISOToDateTimeFormat(transaction.bookTime)}</Typography>
+          <Typography>
+            {ISOToDateTimeFormat(
+              transaction ? transaction.createdAt : new Date().toISOString()
+            )}
+          </Typography>
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -107,7 +124,16 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
           </Typography>
         </Grid>
         <Grid item xs={12} md={9}>
-          <Typography>{transaction.seats.join(", ")}</Typography>
+          {transaction
+            ? transaction.tickets.map((ticket) => (
+                <Stack direction="row" justifyContent="space-between">
+                  <Typography>{ticket.seat.name}</Typography>
+                  <Typography color="primary" fontWeight={800}>
+                    {printNumberWithCommas(ticket.price)} VNĐ
+                  </Typography>
+                </Stack>
+              ))
+            : null}
         </Grid>
         <Grid item xs={12} md={3}>
           <Typography fontWeight="bold" sx={{ margin: 0 }}>
@@ -116,20 +142,26 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
         </Grid>
         <Grid item xs={12} md={9}>
           <Box>
-            {transaction.snacks?.map((snack) => (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography>{snack.name}</Typography>
-                <Typography color="primary" fontWeight={800}>
-                  {printNumberWithCommas(snack.price)} VNĐ
-                </Typography>
-              </Box>
-            ))}
+            {transaction
+              ? transaction.items?.map((item) => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography>{item.id.name}</Typography>
+                    <Stack direction="row" gap={1}>
+                      <Typography>{item.quantity} x</Typography>
+
+                      <Typography color="primary" fontWeight={800}>
+                        {printNumberWithCommas(item.id.price)} VNĐ
+                      </Typography>
+                    </Stack>
+                  </Box>
+                ))
+              : null}
           </Box>
         </Grid>
       </Grid>
@@ -137,7 +169,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
       <Typography variant="h6" sx={{ margin: 0, textAlign: "end" }}>
         Tổng tiền:{" "}
         <span style={{ color: theme.palette.primary.main }}>
-          {printNumberWithCommas(transaction.total)} VNĐ
+          {printNumberWithCommas(transaction ? transaction.totalPrice : 0)} VNĐ
         </span>
       </Typography>
     </Modal>

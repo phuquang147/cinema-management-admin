@@ -8,6 +8,7 @@ import {
   snackSagaActionTypes,
   transactionSagaActionTypes,
 } from "../sagaActionTypes";
+import { resetData } from "../reducers/BookingReducer";
 
 function* workGetTransactions() {
   try {
@@ -24,10 +25,10 @@ function* workGetTransactions() {
 }
 
 function* workAddTransaction(action: {
-  payload: { transaction: TransactionData };
+  payload: { transaction: TransactionData; handleNext: () => void };
   type: string;
 }) {
-  const { transaction } = action.payload;
+  const { transaction, handleNext } = action.payload;
 
   try {
     let { data, status } = yield call(() =>
@@ -36,6 +37,8 @@ function* workAddTransaction(action: {
 
     if (status === 201) {
       toast.success(data.message);
+      handleNext();
+      yield put(resetData());
     }
   } catch (err: any) {
     toast.error(err.response.data.message);
