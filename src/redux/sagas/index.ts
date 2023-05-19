@@ -6,10 +6,11 @@ import * as MovieSaga from "./MovieSaga";
 import * as PostSaga from "./PostSaga";
 import * as RoomSaga from "./RoomSaga";
 import * as RoomTypeSaga from "./RoomTypeSaga";
+import * as ShowTimeSaga from "./ShowTimeSaga";
 import * as SnackSaga from "./SnackSaga";
 import * as StaffSaga from "./StaffSaga";
+import * as TransactionSaga from "./TransactionSaga";
 import * as UserSaga from "./UserSaga";
-import * as ShowTimeSaga from "./ShowTimeSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -67,6 +68,10 @@ export default function* rootSaga() {
     ShowTimeSaga.updateShowTimeSaga(),
     ShowTimeSaga.deleteShowTimeSaga(),
     ShowTimeSaga.getDataForShowTimeSaga(),
+    // Transaction
+    TransactionSaga.getTransactionsSaga(),
+    TransactionSaga.getDataForTransactionSaga(),
+    TransactionSaga.addTransactionSaga(),
     //Image
     ImageSaga.postImageSaga(),
   ]);

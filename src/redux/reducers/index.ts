@@ -1,4 +1,5 @@
 import ActorReducer from "./ActorReducer";
+import BookingReducer from "./BookingReducer";
 import GenreReducer from "./GenreReducer";
 import LoadingReducer from "./LoadingReducer";
 import MovieReducer from "./MovieReducer";
@@ -8,6 +9,7 @@ import RoomTypeReducer from "./RoomTypeReducer";
 import ShowTimeReducer from "./ShowTimeReducer";
 import SnackReducer from "./SnackReducer";
 import StaffReducer from "./StaffReducer";
+import TransactionReducer from "./TransactionReducer";
 import UserReducer from "./UserReducer";
 
 const rootReducer = {
@@ -22,6 +24,8 @@ const rootReducer = {
   post: PostReducer,
   room: RoomReducer,
   showTime: ShowTimeReducer,
+  booking: BookingReducer,
+  transaction: TransactionReducer,
 };
 
 export default rootReducer;

@@ -1,17 +1,27 @@
 import Axios from "axios";
 import Cookies from "js-cookie";
+import { ShowTimeFormData } from "~/components/ShowTimes/ShowTimeForm";
 import {
   URL_ADD_SHOW_TIME,
   URL_DELETE_SHOW_TIME,
   URL_GET_SHOW_TIMES_BY_DATE,
+  URL_GET_SHOW_TIME_BY_ID,
   URL_UPDATE_SHOW_TIME,
 } from "./apiUrls";
-import { ShowTimeFormData } from "~/components/ShowTimes/ShowTimeForm";
 
 const ShowTimeServices = {
   getShowTimesByDate: (date: string) => {
     return Axios({
       url: URL_GET_SHOW_TIMES_BY_DATE(date),
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    });
+  },
+  getShowTimesById: (id: string) => {
+    return Axios({
+      url: URL_GET_SHOW_TIME_BY_ID(id),
       method: "GET",
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,

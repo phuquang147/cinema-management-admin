@@ -72,6 +72,12 @@ export const showTimeSagaActionTypes = {
   GET_DATA_FOR_SHOW_TIME: "GET_DATA_FOR_SHOW_TIME",
 };
 
+export const transactionSagaActionTypes = {
+  GET_TRANSACTIONS_SAGA: "GET_TRANSACTIONS_SAGA",
+  ADD_TRANSACTION_SAGA: "ADD_TRANSACTION_SAGA",
+  GET_DATA_FOR_TRANSACTION: "GET_DATA_FOR_TRANSACTION",
+};
+
 export const imageSagaActionTypes = {
   POST_IMAGE_SAGA: "POST_IMAGE_SAGA",
 };
