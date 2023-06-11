@@ -1,26 +1,55 @@
-import { Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  Button,
+  Container,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Iconify from "~/components/Iconify";
 import Room from "~/components/Rooms/Room";
-import Select from "~/components/Select";
+import useDebounce from "~/hooks/useDebounce";
+import IRoom from "~/interfaces/room.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { roomSagaActionTypes } from "~/redux/sagaActionTypes";
-
-const OPTIONS = [
-  { value: "all", label: "Tất cả" },
-  { value: "using", label: "Đang hoạt động" },
-  { value: "stopped", label: "Ngừng hoạt động" },
-];
 
 const Rooms: React.FC = () => {
   const dispatch = useAppDispatch();
   const rooms = useAppSelector((state) => state.room.rooms);
-  const [selectedFilter, setSelectedFilter] = useState(OPTIONS[0]);
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [loadedRooms, setLoadedRooms] = useState<IRoom[]>([]);
 
   useEffect(() => {
     dispatch({ type: roomSagaActionTypes.GET_ROOMS_SAGA });
   }, [dispatch]);
+
+  useEffect(() => {
+    setLoadedRooms(rooms);
+  }, [rooms]);
+
+  const debouncedValue = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    if (debouncedValue.trim().length === 0) {
+      setLoadedRooms(rooms);
+    }
+
+    if (debouncedValue !== "") {
+      const relevantRooms = rooms.filter((item) =>
+        item.name.toLowerCase().includes(debouncedValue.toLowerCase())
+      );
+      setLoadedRooms(relevantRooms);
+    }
+  }, [debouncedValue, rooms]);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const searchInputValue = e.target.value;
+    if (!searchInputValue.startsWith(" ")) {
+      setSearchValue(searchInputValue);
+    }
+  };
 
   return (
     <Container sx={{ pb: 8 }}>
@@ -33,10 +62,12 @@ const Rooms: React.FC = () => {
       >
         <Typography variant="h4">Phòng chiếu</Typography>
         <Stack direction="row" columnGap={2}>
-          <Select
-            options={OPTIONS}
-            selected={selectedFilter}
-            setSelected={setSelectedFilter}
+          <TextField
+            variant="outlined"
+            placeholder="Tìm kiếm"
+            value={searchValue}
+            onChange={handleInputChange}
+            size="small"
           />
           <Button
             variant="contained"
@@ -49,7 +80,7 @@ const Rooms: React.FC = () => {
         </Stack>
       </Stack>
       <Grid container spacing={3}>
-        {rooms.map((room) => (
+        {loadedRooms.map((room) => (
           <Grid item key={room._id} xs={6} sm={4} md={3}>
             <Room room={room} />
           </Grid>
