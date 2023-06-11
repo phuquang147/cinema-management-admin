@@ -11,8 +11,8 @@ const Logo: React.FC<LogoProps> = ({ disabledLink = false, sx }) => {
   const logo = (
     <Box
       component="img"
-      src="/assets/images/logo.png"
-      sx={{ width: 40, height: 40, ...sx }}
+      src="/assets/images/logo-text-red.png"
+      sx={{ width: "100%", height: 40, ...sx, objectFit: "contain" }}
     />
   );
 
