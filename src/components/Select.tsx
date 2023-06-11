@@ -3,7 +3,7 @@ import { useState } from "react";
 import Iconify from "~/components/Iconify";
 
 interface SelectProps {
-  options: { label: string; value: string }[];
+  options: { value: string; label: string }[];
   selected: { label: string; value: string };
   setSelected: React.Dispatch<
     React.SetStateAction<{
@@ -11,9 +11,15 @@ interface SelectProps {
       label: string;
     }>
   >;
+  sx?: any;
 }
 
-const Select: React.FC<SelectProps> = ({ options, selected, setSelected }) => {
+const Select: React.FC<SelectProps> = ({
+  options,
+  selected,
+  setSelected,
+  sx = "",
+}) => {
   const [open, setOpen] = useState<HTMLElement | null>(null);
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,6 +41,7 @@ const Select: React.FC<SelectProps> = ({ options, selected, setSelected }) => {
             icon={open ? "eva:chevron-up-fill" : "eva:chevron-down-fill"}
           />
         }
+        sx={sx ? sx : {}}
       >
         {selected.label}
       </Button>
