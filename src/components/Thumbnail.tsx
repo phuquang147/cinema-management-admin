@@ -9,12 +9,14 @@ interface ThumbnailProps {
   thumbnail: string;
   handleChangeThumbnail: (value: string) => void;
   crop?: boolean;
+  aspect?: number;
 }
 
 const Thumbnail: React.FC<ThumbnailProps> = ({
   thumbnail,
   handleChangeThumbnail,
   crop = false,
+  aspect,
 }) => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector((state) => state.loading.loading);
@@ -59,7 +61,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
       xs={12}
       sx={{ display: "flex", alignItems: "center", gap: "8px" }}
     >
-      <Typography>Thumbnail</Typography>
+      <Typography>Ảnh chính</Typography>
       {thumbnail === "" ? (
         <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <LoadingButton
@@ -107,6 +109,7 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
         open={showCrop}
         onClose={handleCloseCrop}
         handleUploadCroppedImage={handleUploadCroppedImage}
+        aspect={aspect}
       />
     </Grid>
   );
