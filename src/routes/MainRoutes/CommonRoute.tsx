@@ -1,6 +1,6 @@
 import { RouteObject } from "react-router-dom";
-import Dashboard from "~/pages/Dashboard";
 import Page404 from "~/pages/404";
+import Dashboard from "~/pages/Dashboard";
 // Đặt vé
 import Booking from "~/pages/Booking";
 // Phim
@@ -31,6 +31,8 @@ import EditPost from "~/pages/Posts/EditPost";
 import NewPost from "~/pages/Posts/NewPost";
 // Giao dịch
 import Transactions from "~/pages/Transactions";
+// Báo cáo
+import Report from "~/pages/Report";
 // Cài đặt chung
 import Genres from "~/pages/Settings/Genres";
 import RoomTypes from "~/pages/Settings/RoomTypes";
@@ -132,6 +134,11 @@ const CommonRoutes: RouteObject[] = [
   {
     path: "/giao-dich",
     element: <Transactions />,
+  },
+  // Báo cáo
+  {
+    path: "/bao-cao",
+    element: <Report />,
   },
   // Cài đặt chung
   {
