@@ -1,5 +1,5 @@
 export default interface IMovie {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   genres: { id: string; name: string }[];
@@ -7,10 +7,10 @@ export default interface IMovie {
   director: string;
   thumbnail: string;
   images: string[];
-  duration: number;
+  time: number;
   year: number;
-  premiereDay: Date;
-  endDay: Date;
+  premiereDay: string;
+  endDay: string;
   language: string;
   trailer: string;
   slug: string;
