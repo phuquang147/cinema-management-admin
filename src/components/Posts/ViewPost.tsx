@@ -1,6 +1,6 @@
 import { Box, Card, Typography } from "@mui/material";
 import IPost from "~/interfaces/post.interface";
-import { ISOToDateTime } from "~/utils/formatDateTime";
+import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 
 type ViewPostProps = {
   post: IPost | null;
@@ -27,7 +27,7 @@ const ViewPost: React.FC<ViewPostProps> = ({ post }) => {
         </Typography>
         <Typography>
           <b>Ngày đăng: </b>
-          {post ? ISOToDateTime(post.createdAt) : ""}
+          {post ? ISOToDateTimeFormat(post.createdAt) : ""}
         </Typography>
       </Card>
       <Card sx={{ padding: 4, mt: 2 }}>

@@ -16,7 +16,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Iconify from "~/components/Iconify";
 import { POST_STATUS } from "~/constants";
 import IPost from "~/interfaces/post.interface";
-import { ISOToDateTime } from "~/utils/formatDateTime";
+import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 import SvgIconStyle from "../SvgIconStyle";
 
 const CardMediaStyle = styled("div")({
@@ -173,7 +173,7 @@ const Post: React.FC<PostProps> = ({ post, index }) => {
             variant="caption"
             sx={{ color: "text.disabled", display: "block", marginTop: 1 }}
           >
-            {ISOToDateTime(createdAt)}
+            {ISOToDateTimeFormat(createdAt)}
           </Typography>
 
           <TitleStyle
