@@ -1,11 +1,11 @@
 export default interface IStaff {
-  id: string;
+  _id: string;
   avatar: string;
   name: string;
   email: string;
   phone: string;
   gender: string;
-  birthdate: Date;
+  birthday: Date;
   address: string;
   status: string;
 }

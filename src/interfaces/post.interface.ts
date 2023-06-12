@@ -1,10 +1,12 @@
 export default interface IPost {
-  id: string;
+  _id: string;
   title: string;
   content: string;
-  cover: string;
-  author: { id: string; name: string; avatar: string };
+  thumbnail: string;
+  author: { _id: string; name: string; avatar: string };
   view: number;
-  createdAt: Date;
+  createdAt: string;
+  updatedAt: string;
   slug: string;
+  status: string;
 }
