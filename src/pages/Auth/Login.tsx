@@ -63,9 +63,7 @@ const Login: React.FC = () => {
 
   return (
     <RootStyle>
-      <HeaderStyle>
-        <Logo />
-      </HeaderStyle>
+      <HeaderStyle>{/* <Logo /> */}</HeaderStyle>
 
       {mdUp && (
         <SectionStyle>
