@@ -1,11 +1,13 @@
-import { Container, Stack, Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { Container, IconButton, Stack, Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import Iconify from "~/components/Iconify";
 import PostForm from "~/components/Posts/PostForm";
 import ViewPost from "~/components/Posts/ViewPost";
 import IPost from "~/interfaces/post.interface";
 import { useAppSelector } from "~/redux/hooks";
 
 const EditPost: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
   const location = useLocation();
   const post = location.state ? (location.state.post as IPost) : null;
@@ -15,10 +17,18 @@ const EditPost: React.FC = () => {
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="start"
         mb={5}
+        gap={1}
       >
-        <Typography variant="h4" gutterBottom>
+        <IconButton
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <Iconify icon="ion:arrow-back" />
+        </IconButton>
+        <Typography variant="h4">
           {post && user && user._id === post.author._id
             ? "Chỉnh sửa bài viết"
             : "Xem bài viết"}
