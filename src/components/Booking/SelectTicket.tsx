@@ -91,7 +91,6 @@ const SelectTicket: React.FC<SelectTicketProps> = ({
       // }
     }
   };
-  console.log(tickets);
 
   const unSelectTicket = (
     ticket: ITicket,
@@ -134,8 +133,6 @@ const SelectTicket: React.FC<SelectTicketProps> = ({
       // }
     }
   };
-
-  console.log(tickets);
 
   return (
     <Stack
