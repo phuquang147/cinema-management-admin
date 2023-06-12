@@ -64,7 +64,7 @@ const GenreForm: React.FC<GenreFormProps> = ({
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ p: 3 }}>
+      <Box>
         <RHFTextField name="name" label="Tên thể loại" />
 
         <Stack

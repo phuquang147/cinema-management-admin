@@ -63,7 +63,7 @@ const RoomTypeForm: React.FC<RoomTypeFormProps> = ({
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ p: 3 }}>
+      <Box>
         <RHFTextField name="name" label="Tên loại phòng chiếu" />
 
         <Stack
