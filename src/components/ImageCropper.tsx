@@ -35,6 +35,7 @@ interface ImageCropperProps {
   open: boolean;
   onClose: () => void;
   handleUploadCroppedImage: (image: File) => void;
+  aspect?: number;
 }
 
 const ImageCropper: React.FC<ImageCropperProps> = ({
@@ -42,12 +43,14 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   open,
   onClose,
   handleUploadCroppedImage,
+  aspect,
 }) => {
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+  const [cropAspect, setCropAspect] = useState<number>(1);
 
   useEffect(() => {
     if (file) {
@@ -59,6 +62,10 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
       reader.readAsDataURL(file);
     }
   }, [file]);
+
+  useEffect(() => {
+    if (aspect) setCropAspect(aspect);
+  }, [aspect]);
 
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
     const { width, height } = e.currentTarget;
@@ -104,7 +111,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
             onComplete={(c) => {
               setCompletedCrop(c);
             }}
-            aspect={1}
+            aspect={cropAspect}
           >
             <img ref={imgRef} alt="Crop me" src={imgSrc} onLoad={onImageLoad} />
           </ReactCrop>
