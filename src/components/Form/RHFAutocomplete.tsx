@@ -52,9 +52,9 @@ const RHFAutocomplete: React.FC<RHFAutocompleteProps> = ({
                 value={field.value}
                 error={!!error}
                 helperText={error?.message}
-                onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
-                  e.preventDefault();
-                }}
+                // onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                //   e.preventDefault();
+                // }}
               />
             )}
             {...other}
