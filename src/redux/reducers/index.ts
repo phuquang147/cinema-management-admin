@@ -4,6 +4,7 @@ import GenreReducer from "./GenreReducer";
 import LoadingReducer from "./LoadingReducer";
 import MovieReducer from "./MovieReducer";
 import PostReducer from "./PostReducer";
+import ReportReducer from "./ReportReducer";
 import RoomReducer from "./RoomReducer";
 import RoomTypeReducer from "./RoomTypeReducer";
 import ShowTimeReducer from "./ShowTimeReducer";
@@ -26,6 +27,7 @@ const rootReducer = {
   showTime: ShowTimeReducer,
   booking: BookingReducer,
   transaction: TransactionReducer,
+  report: ReportReducer,
 };
 
 export default rootReducer;

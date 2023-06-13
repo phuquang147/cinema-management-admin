@@ -2,6 +2,7 @@ export const authSagaActionTypes = {
   LOGIN_SAGA: "LOGIN_SAGA",
   RESET_PASSWORD_SAGA: "RESET_PASSWORD_SAGA",
   CHANGE_PASSWORD_SAGA: "CHANGE_PASSWORD_SAGA",
+  UPDATE_USER_SAGA: "UPDATE_USER_SAGA",
 };
 
 export const genreSagaActionTypes = {
@@ -76,6 +77,10 @@ export const transactionSagaActionTypes = {
   GET_TRANSACTIONS_SAGA: "GET_TRANSACTIONS_SAGA",
   ADD_TRANSACTION_SAGA: "ADD_TRANSACTION_SAGA",
   GET_DATA_FOR_TRANSACTION: "GET_DATA_FOR_TRANSACTION",
+};
+
+export const reportSagaActionTypes = {
+  GET_DASHBOARD_SAGA: "GET_DASHBOARD_SAGA",
 };
 
 export const imageSagaActionTypes = {

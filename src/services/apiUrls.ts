@@ -6,6 +6,7 @@ export const DOMAIN_NAME_FILE_SERVICE =
 export const URL_LOGIN = `${DOMAIN_NAME}/auth/login`;
 export const URL_FORGOT_PASSWORD = `${DOMAIN_NAME}/auth/reset-password`;
 export const URL_RESET_PASSWORD = `${DOMAIN_NAME}/auth/reset-password/change-password`;
+export const URL_UPDATE_USER = (id: string) => `${DOMAIN_NAME}/users/${id}`;
 
 //IMAGES
 export const URL_POST_IMAGE = `${DOMAIN_NAME}/upload-image`;
@@ -78,3 +79,6 @@ export const URL_DELETE_SHOW_TIME = (id: string) =>
 // TRANSACTIONS
 export const URL_GET_TRANSACTIONS = `${DOMAIN_NAME}/transactions`;
 export const URL_ADD_TRANSACTION = `${DOMAIN_NAME}/transactions`;
+
+// REPORTS
+export const URL_GET_DASHBOARD = `${DOMAIN_NAME}/dashboard`;

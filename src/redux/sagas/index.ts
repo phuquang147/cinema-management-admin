@@ -11,6 +11,7 @@ import * as SnackSaga from "./SnackSaga";
 import * as StaffSaga from "./StaffSaga";
 import * as TransactionSaga from "./TransactionSaga";
 import * as UserSaga from "./UserSaga";
+import * as ReportSaga from "./ReportSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -18,6 +19,7 @@ export default function* rootSaga() {
     UserSaga.loginSaga(),
     UserSaga.resetPasswordSaga(),
     UserSaga.changePasswordSaga(),
+    UserSaga.updateUserSaga(),
     //Movie
     MovieSaga.getMoviesSaga(),
     MovieSaga.addMovieSaga(),
@@ -72,6 +74,8 @@ export default function* rootSaga() {
     TransactionSaga.getTransactionsSaga(),
     TransactionSaga.getDataForTransactionSaga(),
     TransactionSaga.addTransactionSaga(),
+    // Report
+    ReportSaga.getDashboardSaga(),
     //Image
     ImageSaga.postImageSaga(),
   ]);
