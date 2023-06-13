@@ -38,7 +38,7 @@ function* workUpdateStaff(action: any) {
   try {
     let { data, status } = yield call(() => StaffServices.updateStaff(staff));
 
-    if (status === 200) {
+    if (status === 201) {
       yield put(getStaffs({ staffs: data.users }));
       toast.success(data.message);
       navigate("/nhan-vien");

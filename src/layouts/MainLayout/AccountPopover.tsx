@@ -18,7 +18,7 @@ const MENU_OPTIONS = [
   {
     label: "Thông tin tài khoản",
     icon: "eva:person-fill",
-    linkTo: "/profile",
+    linkTo: "/chinh-sua-thong-tin",
   },
 ];
 

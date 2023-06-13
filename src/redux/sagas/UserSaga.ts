@@ -5,6 +5,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { EmailFormData } from "~/components/ForgotPassword/EmailForm";
 import { ResetPasswordFormData } from "~/components/ForgotPassword/ResetForm";
 import { LoginFormData } from "~/components/Login/LoginForm";
+import { ProfileFormData } from "~/components/Profile/ProfileForm";
 import AuthServices from "~/services/authServices";
 import { getUser } from "../reducers/UserReducer";
 import { authSagaActionTypes } from "../sagaActionTypes";
@@ -67,6 +68,26 @@ function* workChangePassword(action: {
   }
 }
 
+function* workUpdateUser(action: {
+  payload: { data: ProfileFormData; navigate: NavigateFunction };
+  type: string;
+}) {
+  const { data: payloadData } = action.payload;
+
+  try {
+    let { status, data } = yield call(() =>
+      AuthServices.updateUser(payloadData)
+    );
+
+    if (status === 201) {
+      Cookies.set("user", JSON.stringify(data.user));
+      toast.success("Cập nhật thông tin thành công!");
+    }
+  } catch (err: any) {
+    toast.error(err.response.data.message);
+  }
+}
+
 export function* loginSaga() {
   yield takeLatest(authSagaActionTypes.LOGIN_SAGA, workLogin);
 }
@@ -80,4 +101,8 @@ export function* changePasswordSaga() {
     authSagaActionTypes.CHANGE_PASSWORD_SAGA,
     workChangePassword
   );
+}
+
+export function* updateUserSaga() {
+  yield takeLatest(authSagaActionTypes.UPDATE_USER_SAGA, workUpdateUser);
 }

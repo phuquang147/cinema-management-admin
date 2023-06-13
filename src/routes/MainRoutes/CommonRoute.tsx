@@ -36,6 +36,8 @@ import Report from "~/pages/Report";
 // Cài đặt chung
 import Genres from "~/pages/Settings/Genres";
 import RoomTypes from "~/pages/Settings/RoomTypes";
+// Thông tin
+import Profile from "~/pages/Profile";
 
 const CommonRoutes: RouteObject[] = [
   {
@@ -149,7 +151,11 @@ const CommonRoutes: RouteObject[] = [
     path: "/loai-phong-chieu",
     element: <RoomTypes />,
   },
-
+  // Thông tin
+  {
+    path: "/chinh-sua-thong-tin",
+    element: <Profile />,
+  },
   //
   {
     path: "*",
