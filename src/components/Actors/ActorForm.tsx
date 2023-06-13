@@ -135,6 +135,7 @@ const ActorForm: React.FC<ActorFormProps> = ({ type = "new" }) => {
                 setValue("avatar", avatar);
               }}
               crop={true}
+              aspect={3 / 4}
             />
             {errors.avatar && (
               <CustomErrorText
