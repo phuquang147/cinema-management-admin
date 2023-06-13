@@ -6,6 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { GridRowParams } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ActionsMenu from "~/components/ActionsMenu";
@@ -23,7 +24,7 @@ const columns = [
     headerAlign: "center",
     align: "center",
     minWidth: 100,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
@@ -39,7 +40,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       return (
         <Typography variant="subtitle2" noWrap textAlign="start">
@@ -55,7 +56,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 150,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       const birthday = new Date(row.birthday).toLocaleDateString();
       return <Typography>{birthday}</Typography>;
@@ -80,7 +81,7 @@ const columns = [
     filterable: false,
     minWidth: 180,
     flex: 1,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { handleEdit, handleOpenDetail, handleDelete, ...actor } =
         params.row;
 

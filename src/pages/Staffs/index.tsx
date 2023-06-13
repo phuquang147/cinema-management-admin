@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { GridRowParams } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import ActionsMenu from "~/components/ActionsMenu";
@@ -24,7 +25,7 @@ const columns = [
     headerAlign: "center",
     align: "center",
     minWidth: 100,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
 
       return (
@@ -44,7 +45,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       return (
         <Typography variant="subtitle2" noWrap textAlign="start">
@@ -60,7 +61,7 @@ const columns = [
     headerAlign: "center",
     align: "center",
     minWidth: 120,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       return row.gender === "Nam" ? (
         <Chip
@@ -72,6 +73,7 @@ const columns = [
             fontSize: "13px",
             fontWeight: "bold",
             width: "60px",
+            borderRadius: "4px",
           }}
         />
       ) : (
@@ -96,7 +98,7 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 150,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       const birthday = new Date(row.birthday).toLocaleDateString();
       return <Typography>{birthday}</Typography>;
@@ -117,7 +119,7 @@ const columns = [
     headerAlign: "center",
     align: "center",
     minWidth: 130,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { row } = params;
       if (row.status === "Đang làm")
         return (
@@ -130,6 +132,7 @@ const columns = [
               fontSize: "13px",
               fontWeight: "bold",
               width: "130px",
+              borderRadius: "4px",
             }}
           />
         );
@@ -144,6 +147,7 @@ const columns = [
               fontSize: "13px",
               fontWeight: "bold",
               width: "130px",
+              borderRadius: "4px",
             }}
           />
         );
@@ -160,7 +164,7 @@ const columns = [
     filterable: false,
     minWidth: 80,
     flex: 1,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams) => {
       const { handleEdit, ...staff } = params.row;
 
       return <ActionsMenu item={staff} onEdit={handleEdit} />;

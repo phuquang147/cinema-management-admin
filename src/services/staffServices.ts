@@ -1,45 +1,45 @@
 import Axios from "axios";
 import Cookies from "js-cookie";
 import {
-  URL_ADD_ACTOR,
-  URL_DELETE_ACTOR,
-  URL_GET_ACTORS,
-  URL_UPDATE_ACTOR,
+  URL_ADD_STAFF,
+  URL_DELETE_STAFF,
+  URL_GET_STAFFS,
+  URL_UPDATE_STAFF,
 } from "./apiUrls";
 
-const ActorServices = {
-  getActors: () => {
+const StaffServices = {
+  getStaffs: () => {
     return Axios({
-      url: URL_GET_ACTORS,
+      url: URL_GET_STAFFS,
       method: "GET",
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
     });
   },
-  addActor: (actor: any) => {
+  addStaff: (staff: any) => {
     return Axios({
-      url: URL_ADD_ACTOR,
+      url: URL_ADD_STAFF,
       method: "POST",
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
-      data: actor,
+      data: staff,
     });
   },
-  updateActor: (actor: any) => {
+  updateStaff: (staff: any) => {
     return Axios({
-      url: URL_UPDATE_ACTOR(actor.id),
+      url: URL_UPDATE_STAFF(staff.id),
       method: "PUT",
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
-      data: actor,
+      data: staff,
     });
   },
-  deleteActor: (id: string) => {
+  deleteStaff: (id: string) => {
     return Axios({
-      url: URL_DELETE_ACTOR(id),
+      url: URL_DELETE_STAFF(id),
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,
@@ -48,4 +48,4 @@ const ActorServices = {
   },
 };
 
-export default ActorServices;
+export default StaffServices;
