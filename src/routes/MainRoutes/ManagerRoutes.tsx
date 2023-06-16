@@ -39,7 +39,7 @@ import RoomTypes from "~/pages/Settings/RoomTypes";
 // Thông tin
 import Profile from "~/pages/Profile";
 
-const CommonRoutes: RouteObject[] = [
+const ManagerRoutes: RouteObject[] = [
   {
     path: "/",
     element: <Dashboard />,
@@ -163,4 +163,4 @@ const CommonRoutes: RouteObject[] = [
   },
 ];
 
-export default CommonRoutes;
+export default ManagerRoutes;

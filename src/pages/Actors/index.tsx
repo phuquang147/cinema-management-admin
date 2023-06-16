@@ -15,6 +15,7 @@ import Table from "~/components/Table";
 import IActor from "~/interfaces/actor.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { actorSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const columns = [
   {
@@ -117,38 +118,40 @@ const Actors: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Diễn viên</Typography>
-        <Button
-          variant="contained"
-          component={Link}
-          to="/them-dien-vien"
-          startIcon={<Iconify icon="eva:plus-fill" />}
+    <AuthorizeContainer staffCanView={false}>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
         >
-          Thêm diễn viên
-        </Button>
-      </Stack>
+          <Typography variant="h4">Diễn viên</Typography>
+          <Button
+            variant="contained"
+            component={Link}
+            to="/them-dien-vien"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Thêm diễn viên
+          </Button>
+        </Stack>
 
-      <Card
-        sx={{
-          width: "100%",
-          "& .super-app-theme--header": {
-            fontWeight: "bold",
-            color: "#222",
-            fontSize: "16px",
-          },
-        }}
-      >
-        <Table rows={mappedRows} columns={columns} />
-      </Card>
-    </Container>
+        <Card
+          sx={{
+            width: "100%",
+            "& .super-app-theme--header": {
+              fontWeight: "bold",
+              color: "#222",
+              fontSize: "16px",
+            },
+          }}
+        >
+          <Table rows={mappedRows} columns={columns} />
+        </Card>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

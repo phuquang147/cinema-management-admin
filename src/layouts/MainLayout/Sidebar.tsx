@@ -7,7 +7,7 @@ import Scrollbar from "~/components/Scrollbar";
 import useResponsive from "~/hooks/useResponsive";
 import NavSection from "~/layouts/MainLayout/NavSection";
 import { useAppSelector } from "~/redux/hooks";
-import navConfig from "./NavConfig";
+import { managerNavConfig, staffNavConfig } from "./NavConfig";
 
 const DRAWER_WIDTH = 280;
 
@@ -39,11 +39,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpenSidebar, onCloseSidebar }) => {
 
   const isDesktop = useResponsive("up", "lg");
 
-  let navConfigByRole = [...navConfig];
-  // if (user?.name !== "" && user?.role?.name === "Nhân viên") {
-  //   navConfigByRole = navConfig.slice(0, navConfig.length - 2);
-  //   navConfigByRole.shift();
-  // }
+  let navConfigByRole =
+    user?.role === "Chủ rạp" || user?.role === "Quản lý"
+      ? managerNavConfig
+      : staffNavConfig;
 
   useEffect(() => {
     if (isOpenSidebar) {

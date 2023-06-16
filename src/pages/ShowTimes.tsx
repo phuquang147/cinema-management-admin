@@ -19,6 +19,7 @@ import ShowTimeForm from "~/components/ShowTimes/ShowTimeForm";
 import IShowTime from "~/interfaces/showTime.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { showTimeSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 type MappedShowTime = {
   name: string;
@@ -173,74 +174,76 @@ const ShowTimes: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Lịch chiếu</Typography>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleShowModal}
+    <AuthorizeContainer staffCanView={false}>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
         >
-          Thêm lịch chiếu
-        </Button>
-      </Stack>
+          <Typography variant="h4">Lịch chiếu</Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={handleShowModal}
+          >
+            Thêm lịch chiếu
+          </Button>
+        </Stack>
 
-      <Card sx={{ p: 3 }}>
-        <Grid container>
-          <Grid item xs={12} md={6} lg={4}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Ngày"
-                value={date}
-                inputFormat="DD/MM/YYYY"
-                onChange={handleChangeDate}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    sx={{ width: "100%" }}
-                    onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
-                      e.preventDefault();
-                    }}
-                  />
-                )}
-              />
-            </LocalizationProvider>
+        <Card sx={{ p: 3 }}>
+          <Grid container>
+            <Grid item xs={12} md={6} lg={4}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Ngày"
+                  value={date}
+                  inputFormat="DD/MM/YYYY"
+                  onChange={handleChangeDate}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ width: "100%" }}
+                      onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                        e.preventDefault();
+                      }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
           </Grid>
-        </Grid>
-      </Card>
+        </Card>
 
-      <Card
-        sx={{
-          width: "100%",
-          mt: 2,
-          p: 2,
-        }}
-      >
-        <ReactApexChart
-          options={options}
-          series={mappedShowTimes}
-          type="rangeBar"
-          height={chartHeight}
-        />
-      </Card>
-      <Modal
-        open={showModal}
-        onClose={handleCloseModal}
-        title={!editingShowTime ? "Thêm lịch chiếu" : "Chỉnh sửa lịch chiếu"}
-      >
-        <ShowTimeForm
-          type={!editingShowTime ? "new" : "edit"}
-          showTime={editingShowTime}
-          handleCloseModal={handleCloseModal}
-        />
-      </Modal>
-    </Container>
+        <Card
+          sx={{
+            width: "100%",
+            mt: 2,
+            p: 2,
+          }}
+        >
+          <ReactApexChart
+            options={options}
+            series={mappedShowTimes}
+            type="rangeBar"
+            height={chartHeight}
+          />
+        </Card>
+        <Modal
+          open={showModal}
+          onClose={handleCloseModal}
+          title={!editingShowTime ? "Thêm lịch chiếu" : "Chỉnh sửa lịch chiếu"}
+        >
+          <ShowTimeForm
+            type={!editingShowTime ? "new" : "edit"}
+            showTime={editingShowTime}
+            handleCloseModal={handleCloseModal}
+          />
+        </Modal>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

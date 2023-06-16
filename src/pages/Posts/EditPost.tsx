@@ -5,6 +5,7 @@ import PostForm from "~/components/Posts/PostForm";
 import ViewPost from "~/components/Posts/ViewPost";
 import IPost from "~/interfaces/post.interface";
 import { useAppSelector } from "~/redux/hooks";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const EditPost: React.FC = () => {
   const navigate = useNavigate();
@@ -13,34 +14,36 @@ const EditPost: React.FC = () => {
   const post = location.state ? (location.state.post as IPost) : null;
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="start"
-        mb={5}
-        gap={1}
-      >
-        <IconButton
-          onClick={() => {
-            navigate(-1);
-          }}
+    <AuthorizeContainer>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="start"
+          mb={5}
+          gap={1}
         >
-          <Iconify icon="ion:arrow-back" />
-        </IconButton>
-        <Typography variant="h4">
-          {post && user && user._id === post.author._id
-            ? "Chỉnh sửa bài viết"
-            : "Xem bài viết"}
-        </Typography>
-      </Stack>
+          <IconButton
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <Iconify icon="ion:arrow-back" />
+          </IconButton>
+          <Typography variant="h4">
+            {post && user && user._id === post.author._id
+              ? "Chỉnh sửa bài viết"
+              : "Xem bài viết"}
+          </Typography>
+        </Stack>
 
-      {post && user && user._id === post.author._id ? (
-        <PostForm type="edit" />
-      ) : (
-        <ViewPost post={post} />
-      )}
-    </Container>
+        {post && user && user._id === post.author._id ? (
+          <PostForm type="edit" />
+        ) : (
+          <ViewPost post={post} />
+        )}
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

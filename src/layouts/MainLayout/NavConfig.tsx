@@ -13,7 +13,7 @@ export interface INavConfig {
   children?: { path: string; title: string }[];
 }
 
-const navConfig: INavConfig[] = [
+export const managerNavConfig: INavConfig[] = [
   {
     title: "Thống kê",
     path: "/",
@@ -85,4 +85,20 @@ const navConfig: INavConfig[] = [
   },
 ];
 
-export default navConfig;
+export const staffNavConfig = [
+  {
+    title: "Đặt vé",
+    path: "/",
+    icon: getIcon("carbon:ticket"),
+  },
+  {
+    title: "Bài viết",
+    path: "/bai-viet",
+    icon: getIcon("bi:file-post"),
+  },
+  {
+    title: "Giao dịch",
+    path: "/giao-dich",
+    icon: getIcon("solar:bill-list-outline"),
+  },
+];

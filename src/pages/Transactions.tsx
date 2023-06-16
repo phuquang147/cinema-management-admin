@@ -7,6 +7,7 @@ import TransactionDetail from "~/components/Transactions/TransactionDetail";
 import ITransaction from "~/interfaces/transaction.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { transactionSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 import { ISOToDateTimeFormat } from "~/utils/formatDateTime";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
 
@@ -208,35 +209,37 @@ const Transactions: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Giao dịch</Typography>
-      </Stack>
+    <AuthorizeContainer>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
+        >
+          <Typography variant="h4">Giao dịch</Typography>
+        </Stack>
 
-      <Card
-        sx={{
-          width: "100%",
-          "& .super-app-theme--header": {
-            fontWeight: "bold",
-            color: "#222",
-            fontSize: "16px",
-          },
-        }}
-      >
-        <Table rows={mappedRows} columns={columns} />
-      </Card>
-      <TransactionDetail
-        open={!!transactionDetail}
-        transaction={transactionDetail}
-        onClose={handleCloseTransactionDetail}
-      />
-    </Container>
+        <Card
+          sx={{
+            width: "100%",
+            "& .super-app-theme--header": {
+              fontWeight: "bold",
+              color: "#222",
+              fontSize: "16px",
+            },
+          }}
+        >
+          <Table rows={mappedRows} columns={columns} />
+        </Card>
+        <TransactionDetail
+          open={!!transactionDetail}
+          transaction={transactionDetail}
+          onClose={handleCloseTransactionDetail}
+        />
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

@@ -9,6 +9,7 @@ import Modal from "~/HOC/Modal";
 import IGenre from "~/interfaces/genre.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { genreSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const columns = [
   {
@@ -94,48 +95,52 @@ const Genres: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Thể loại phim</Typography>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleShowModal}
+    <AuthorizeContainer staffCanView={false}>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
         >
-          Thêm thể loại phim
-        </Button>
-      </Stack>
+          <Typography variant="h4">Thể loại phim</Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={handleShowModal}
+          >
+            Thêm thể loại phim
+          </Button>
+        </Stack>
 
-      <Card
-        sx={{
-          width: "100%",
-          "& .super-app-theme--header": {
-            fontWeight: "bold",
-            color: "#222",
-            fontSize: "16px",
-          },
-        }}
-      >
-        <Table rows={mappedRows} columns={columns} />
-      </Card>
-      <Modal
-        open={Boolean(showModal)}
-        onClose={handleCloseModal}
-        title={!editingGenre ? "Thêm thể loại phim" : "Chỉnh sửa thế loại phim"}
-      >
-        <GenreForm
-          type={!editingGenre ? "new" : "edit"}
-          genre={editingGenre}
-          handleCloseModal={handleCloseModal}
-        />
-      </Modal>
-    </Container>
+        <Card
+          sx={{
+            width: "100%",
+            "& .super-app-theme--header": {
+              fontWeight: "bold",
+              color: "#222",
+              fontSize: "16px",
+            },
+          }}
+        >
+          <Table rows={mappedRows} columns={columns} />
+        </Card>
+        <Modal
+          open={Boolean(showModal)}
+          onClose={handleCloseModal}
+          title={
+            !editingGenre ? "Thêm thể loại phim" : "Chỉnh sửa thế loại phim"
+          }
+        >
+          <GenreForm
+            type={!editingGenre ? "new" : "edit"}
+            genre={editingGenre}
+            handleCloseModal={handleCloseModal}
+          />
+        </Modal>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

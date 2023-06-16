@@ -14,6 +14,7 @@ import useDebounce from "~/hooks/useDebounce";
 import IRoom from "~/interfaces/room.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { roomSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const Rooms: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -52,41 +53,43 @@ const Rooms: React.FC = () => {
   };
 
   return (
-    <Container sx={{ pb: 8 }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Phòng chiếu</Typography>
-        <Stack direction="row" columnGap={2}>
-          <TextField
-            variant="outlined"
-            placeholder="Tìm kiếm"
-            value={searchValue}
-            onChange={handleInputChange}
-            size="small"
-          />
-          <Button
-            variant="contained"
-            component={Link}
-            to="/them-phong-chieu"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            Thêm phòng chiếu
-          </Button>
+    <AuthorizeContainer staffCanView={false}>
+      <Container sx={{ pb: 8 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
+        >
+          <Typography variant="h4">Phòng chiếu</Typography>
+          <Stack direction="row" columnGap={2}>
+            <TextField
+              variant="outlined"
+              placeholder="Tìm kiếm"
+              value={searchValue}
+              onChange={handleInputChange}
+              size="small"
+            />
+            <Button
+              variant="contained"
+              component={Link}
+              to="/them-phong-chieu"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              Thêm phòng chiếu
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-      <Grid container spacing={3}>
-        {loadedRooms.map((room) => (
-          <Grid item key={room._id} xs={6} sm={4} md={3}>
-            <Room room={room} />
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+        <Grid container spacing={3}>
+          {loadedRooms.map((room) => (
+            <Grid item key={room._id} xs={6} sm={4} md={3}>
+              <Room room={room} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

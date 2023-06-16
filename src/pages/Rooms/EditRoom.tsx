@@ -7,6 +7,7 @@ import RoomForm from "~/components/Rooms/RoomForm";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { getRoomById } from "~/redux/reducers/RoomReducer";
 import { roomSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const EditRoom: React.FC = () => {
   const location = useLocation();
@@ -29,28 +30,30 @@ const EditRoom: React.FC = () => {
   }, [location.state, dispatch]);
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="start"
-        mb={5}
-        gap={1}
-      >
-        <IconButton
-          onClick={() => {
-            navigate(-1);
-          }}
+    <AuthorizeContainer staffCanView={false}>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="start"
+          mb={5}
+          gap={1}
         >
-          <Iconify icon="ion:arrow-back" />
-        </IconButton>
-        <Typography variant="h4">Chỉnh sửa phòng chiếu</Typography>
-      </Stack>
+          <IconButton
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <Iconify icon="ion:arrow-back" />
+          </IconButton>
+          <Typography variant="h4">Chỉnh sửa phòng chiếu</Typography>
+        </Stack>
 
-      <Card sx={{ padding: 4 }}>
-        {loading ? <Loading /> : <RoomForm type="edit" room={edittingRoom} />}
-      </Card>
-    </Container>
+        <Card sx={{ padding: 4 }}>
+          {loading ? <Loading /> : <RoomForm type="edit" room={edittingRoom} />}
+        </Card>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

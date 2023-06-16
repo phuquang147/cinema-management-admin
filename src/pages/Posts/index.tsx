@@ -15,6 +15,7 @@ import Post from "~/components/Posts/Post";
 import IPost from "~/interfaces/post.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { postSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -61,50 +62,52 @@ export default function Posts() {
   };
 
   return (
-    <Container sx={{ pb: 8 }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-      >
-        <Typography variant="h4" gutterBottom>
-          Bài viết
-        </Typography>
-        <Button
-          variant="contained"
-          component={RouterLink}
-          to="/them-bai-viet"
-          startIcon={<Iconify icon="eva:plus-fill" />}
+    <AuthorizeContainer>
+      <Container sx={{ pb: 8 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
         >
-          Thêm bài viết
-        </Button>
-      </Stack>
+          <Typography variant="h4" gutterBottom>
+            Bài viết
+          </Typography>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/them-bai-viet"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Thêm bài viết
+          </Button>
+        </Stack>
 
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={tab}
-          onChange={handleChangeTab}
-          aria-label="basic tabs example"
-        >
-          <Tab label="Tất cả" {...a11yProps(0)} />
-          <Tab label="Cá nhân" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      <TabPanel value={tab} index={0}>
-        <Grid container spacing={3}>
-          {allPosts.map((post: IPost, index: number) => (
-            <Post key={post._id} post={post} index={index} />
-          ))}
-        </Grid>
-      </TabPanel>
-      <TabPanel value={tab} index={1}>
-        <Grid container spacing={3}>
-          {myPosts.map((post: IPost, index: number) => (
-            <Post key={post._id} post={post} index={index} />
-          ))}
-        </Grid>
-      </TabPanel>
-    </Container>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={tab}
+            onChange={handleChangeTab}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Tất cả" {...a11yProps(0)} />
+            <Tab label="Cá nhân" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={tab} index={0}>
+          <Grid container spacing={3}>
+            {allPosts.map((post: IPost, index: number) => (
+              <Post key={post._id} post={post} index={index} />
+            ))}
+          </Grid>
+        </TabPanel>
+        <TabPanel value={tab} index={1}>
+          <Grid container spacing={3}>
+            {myPosts.map((post: IPost, index: number) => (
+              <Post key={post._id} post={post} index={index} />
+            ))}
+          </Grid>
+        </TabPanel>
+      </Container>
+    </AuthorizeContainer>
   );
 }

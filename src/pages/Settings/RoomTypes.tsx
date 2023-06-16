@@ -9,6 +9,7 @@ import Modal from "~/HOC/Modal";
 import IRoomType from "~/interfaces/roomType.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { roomTypeSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const columns = [
   {
@@ -94,52 +95,54 @@ const RoomTypes: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Container>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Loại phòng chiếu</Typography>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleShowModal}
+    <AuthorizeContainer staffCanView={false}>
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
         >
-          Thêm loại phòng chiếu
-        </Button>
-      </Stack>
+          <Typography variant="h4">Loại phòng chiếu</Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={handleShowModal}
+          >
+            Thêm loại phòng chiếu
+          </Button>
+        </Stack>
 
-      <Card
-        sx={{
-          width: "100%",
-          "& .super-app-theme--header": {
-            fontWeight: "bold",
-            color: "#222",
-            fontSize: "16px",
-          },
-        }}
-      >
-        <Table rows={mappedRows} columns={columns} />
-      </Card>
-      <Modal
-        open={Boolean(showModal)}
-        onClose={handleCloseModal}
-        title={
-          !editingRoomType
-            ? "Thêm loại phòng chiếu"
-            : "Chỉnh sửa loại phòng chiếu"
-        }
-      >
-        <RoomTypeForm
-          type={!editingRoomType ? "new" : "edit"}
-          roomType={editingRoomType}
-          handleCloseModal={handleCloseModal}
-        />
-      </Modal>
-    </Container>
+        <Card
+          sx={{
+            width: "100%",
+            "& .super-app-theme--header": {
+              fontWeight: "bold",
+              color: "#222",
+              fontSize: "16px",
+            },
+          }}
+        >
+          <Table rows={mappedRows} columns={columns} />
+        </Card>
+        <Modal
+          open={Boolean(showModal)}
+          onClose={handleCloseModal}
+          title={
+            !editingRoomType
+              ? "Thêm loại phòng chiếu"
+              : "Chỉnh sửa loại phòng chiếu"
+          }
+        >
+          <RoomTypeForm
+            type={!editingRoomType ? "new" : "edit"}
+            roomType={editingRoomType}
+            handleCloseModal={handleCloseModal}
+          />
+        </Modal>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

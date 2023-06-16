@@ -10,6 +10,7 @@ import {
 import { FC, SyntheticEvent, useState } from "react";
 import GeneralReport from "~/components/Report/GeneralReport";
 import MovieReport from "~/components/Report/MovieReport";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -47,35 +48,37 @@ const Report: FC = () => {
   };
 
   return (
-    <Container sx={{ pb: 4 }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Giao dịch</Typography>
-      </Stack>
+    <AuthorizeContainer staffCanView={false}>
+      <Container sx={{ pb: 4 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
+        >
+          <Typography variant="h4">Giao dịch</Typography>
+        </Stack>
 
-      <Card
-        sx={{
-          width: "100%",
-          px: 3,
-        }}
-      >
-        <Tabs value={tab} onChange={handleChangeTab}>
-          <Tab label="Báo cáo chung" {...a11yProps(0)} />
-          <Tab label="Báo cáo theo phim" {...a11yProps(1)} />
-        </Tabs>
-        <TabPanel value={tab} index={0}>
-          <GeneralReport />
-        </TabPanel>
-        <TabPanel value={tab} index={1}>
-          <MovieReport />
-        </TabPanel>
-      </Card>
-    </Container>
+        <Card
+          sx={{
+            width: "100%",
+            px: 3,
+          }}
+        >
+          <Tabs value={tab} onChange={handleChangeTab}>
+            <Tab label="Báo cáo chung" {...a11yProps(0)} />
+            <Tab label="Báo cáo theo phim" {...a11yProps(1)} />
+          </Tabs>
+          <TabPanel value={tab} index={0}>
+            <GeneralReport />
+          </TabPanel>
+          <TabPanel value={tab} index={1}>
+            <MovieReport />
+          </TabPanel>
+        </Card>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

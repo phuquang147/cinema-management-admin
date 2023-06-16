@@ -16,6 +16,7 @@ import IMovie from "~/interfaces/movie.interface";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { FILTERS, setFilter } from "~/redux/reducers/MovieReducer";
 import { movieSagaActionTypes } from "~/redux/sagaActionTypes";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const Movies: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -54,50 +55,52 @@ const Movies: React.FC = () => {
   };
 
   return (
-    <Container sx={{ pb: 8 }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Phim</Typography>
+    <AuthorizeContainer staffCanView={false}>
+      <Container sx={{ pb: 8 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
+        >
+          <Typography variant="h4">Phim</Typography>
 
-        <Stack direction="row" columnGap={2}>
-          <TextField
-            variant="outlined"
-            placeholder="Tìm kiếm"
-            value={searchValue}
-            onChange={handleInputChange}
-            size="small"
-          />
-          <Select
-            options={FILTERS}
-            selected={filter}
-            setSelected={(value) => {
-              dispatch(setFilter(value));
-            }}
-            sx={{ height: "100%" }}
-          />
-          <Button
-            variant="contained"
-            component={Link}
-            to="/them-phim"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            Thêm phim
-          </Button>
+          <Stack direction="row" columnGap={2}>
+            <TextField
+              variant="outlined"
+              placeholder="Tìm kiếm"
+              value={searchValue}
+              onChange={handleInputChange}
+              size="small"
+            />
+            <Select
+              options={FILTERS}
+              selected={filter}
+              setSelected={(value) => {
+                dispatch(setFilter(value));
+              }}
+              sx={{ height: "100%" }}
+            />
+            <Button
+              variant="contained"
+              component={Link}
+              to="/them-phim"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              Thêm phim
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-      <Grid container spacing={3}>
-        {loadedMovies.map((movie) => (
-          <Grid item key={movie._id} xs={6} sm={4} md={3}>
-            <Movie movie={movie} />
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+        <Grid container spacing={3}>
+          {loadedMovies.map((movie) => (
+            <Grid item key={movie._id} xs={6} sm={4} md={3}>
+              <Movie movie={movie} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 

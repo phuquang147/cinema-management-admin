@@ -10,6 +10,7 @@ import Payment from "~/components/Booking/Payment";
 import SelectShowTime from "~/components/Booking/SelectShowTime";
 import SelectSnack from "~/components/Booking/SelectSnack";
 import SelectTicket from "~/components/Booking/SelectTicket";
+import AuthorizeContainer from "~/routes/AuthorizeContainer";
 
 const steps = ["Chọn suất chiếu", "Chọn ghế", "Chọn món", "Thanh toán"];
 
@@ -41,71 +42,73 @@ const Booking: React.FC = () => {
   };
 
   return (
-    <Container sx={{ pb: 8 }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={5}
-        columnGap={2}
-      >
-        <Typography variant="h4">Đặt vé</Typography>
-      </Stack>
+    <AuthorizeContainer>
+      <Container sx={{ pb: 8 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+          columnGap={2}
+        >
+          <Typography variant="h4">Đặt vé</Typography>
+        </Stack>
 
-      <Box sx={{ width: "100%" }}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const stepProps: { completed?: boolean } = {};
-            const labelProps: { optional?: React.ReactElement } = {};
+        <Box sx={{ width: "100%" }}>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label, index) => {
+              const stepProps: { completed?: boolean } = {};
+              const labelProps: { optional?: React.ReactElement } = {};
 
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            }
+              if (isStepSkipped(index)) {
+                stepProps.completed = false;
+              }
 
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        {activeStep === steps.length ? (
-          <Stack
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <img
-              src="./assets/images/payment-success.png"
-              alt=""
-              style={{ marginTop: "50px" }}
-            />
-            <Typography sx={{ mt: 2, mb: 1, fontSize: 18 }}>
-              Thanh toán thành công
-            </Typography>
-            <Button variant="contained" onClick={handleReset}>
-              Đặt vé mới
-            </Button>
-          </Stack>
-        ) : (
-          <Box sx={{ mt: 3 }}>
-            {activeStep === 0 && <SelectShowTime handleNext={handleNext} />}
-            {activeStep === 1 && (
-              <SelectTicket handleBack={handleBack} handleNext={handleNext} />
-            )}
-            {activeStep === 2 && (
-              <SelectSnack handleBack={handleBack} handleNext={handleNext} />
-            )}
-            {activeStep === 3 && (
-              <Payment handleBack={handleBack} handleNext={handleNext} />
-            )}
-          </Box>
-        )}
-      </Box>
-    </Container>
+              return (
+                <Step key={label} {...stepProps}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          {activeStep === steps.length ? (
+            <Stack
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src="./assets/images/payment-success.png"
+                alt=""
+                style={{ marginTop: "50px" }}
+              />
+              <Typography sx={{ mt: 2, mb: 1, fontSize: 18 }}>
+                Thanh toán thành công
+              </Typography>
+              <Button variant="contained" onClick={handleReset}>
+                Đặt vé mới
+              </Button>
+            </Stack>
+          ) : (
+            <Box sx={{ mt: 3 }}>
+              {activeStep === 0 && <SelectShowTime handleNext={handleNext} />}
+              {activeStep === 1 && (
+                <SelectTicket handleBack={handleBack} handleNext={handleNext} />
+              )}
+              {activeStep === 2 && (
+                <SelectSnack handleBack={handleBack} handleNext={handleNext} />
+              )}
+              {activeStep === 3 && (
+                <Payment handleBack={handleBack} handleNext={handleNext} />
+              )}
+            </Box>
+          )}
+        </Box>
+      </Container>
+    </AuthorizeContainer>
   );
 };
 
