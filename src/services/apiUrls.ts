@@ -82,3 +82,6 @@ export const URL_ADD_TRANSACTION = `${DOMAIN_NAME}/transactions`;
 
 // REPORTS
 export const URL_GET_DASHBOARD = `${DOMAIN_NAME}/dashboard`;
+
+// NATIONS
+export const URL_GET_NATIONS = `${DOMAIN_NAME}/nations`;

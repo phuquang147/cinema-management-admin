@@ -1,18 +1,19 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import FormProvider from "~/components/Form/FormProvider";
 import RHFDatePicker from "~/components/Form/RHFDatePicker";
 import RHFTextField from "~/components/Form/RHFTextField";
-import { useAppDispatch } from "~/redux/hooks";
+import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { actorSagaActionTypes } from "~/redux/sagaActionTypes";
 import AlertModal from "../AlertModal";
 import Editor from "../Editor";
 import CustomErrorText from "../Form/CustomErrorText";
+import RHFAutocomplete from "../Form/RHFAutocomplete";
 import ImageGallery from "../ImageGallery";
 import Thumbnail from "../Thumbnail";
 
@@ -25,6 +26,7 @@ const ActorForm: React.FC<ActorFormProps> = ({ type = "new" }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const actor = type === "edit" && location.state ? location.state.actor : null;
+  const { nations } = useAppSelector((state) => state.nation);
   const [avatar, setAvatar] = useState<string>(actor ? actor.avatar : "");
   const [images, setImages] = useState<string[]>(actor ? actor.images : []);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
@@ -99,6 +101,10 @@ const ActorForm: React.FC<ActorFormProps> = ({ type = "new" }) => {
       });
   };
 
+  useEffect(() => {
+    dispatch({ type: actorSagaActionTypes.GET_DATA_FOR_ACTOR_SAGA });
+  }, []);
+
   return type === "edit" && !actor ? (
     <Box
       sx={{
@@ -124,7 +130,14 @@ const ActorForm: React.FC<ActorFormProps> = ({ type = "new" }) => {
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-            <RHFTextField name="nation" label="Quốc tịch" />
+            <RHFAutocomplete
+              name="nation"
+              label="Quốc tịch"
+              options={nations}
+              getOptionLabel={(option) => option}
+              isOptionEqualToValue={(option, value) => option === value}
+              disableClearable
+            />
           </Grid>
 
           <Grid item xs={12}>

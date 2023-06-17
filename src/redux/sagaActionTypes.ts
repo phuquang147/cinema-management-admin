@@ -24,6 +24,7 @@ export const actorSagaActionTypes = {
   ADD_ACTOR_SAGA: "ADD_ACTOR_SAGA",
   UPDATE_ACTOR_SAGA: "UPDATE_ACTOR_SAGA",
   DELETE_ACTOR_SAGA: "DELETE_ACTOR_SAGA",
+  GET_DATA_FOR_ACTOR_SAGA: "GET_DATA_FOR_ACTOR_SAGA",
 };
 
 export const roomTypeSagaActionTypes = {
@@ -85,4 +86,8 @@ export const reportSagaActionTypes = {
 
 export const imageSagaActionTypes = {
   POST_IMAGE_SAGA: "POST_IMAGE_SAGA",
+};
+
+export const commonSagaActionTypes = {
+  GET_NATIONS_SAGA: "GET_NATIONS_SAGA",
 };

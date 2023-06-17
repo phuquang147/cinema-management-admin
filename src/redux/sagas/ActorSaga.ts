@@ -2,7 +2,10 @@ import { toast } from "react-toastify";
 import { call, put, takeLatest } from "redux-saga/effects";
 import ActorServices from "~/services/actorServices";
 import { getActors } from "../reducers/ActorReducer";
-import { actorSagaActionTypes } from "../sagaActionTypes";
+import {
+  actorSagaActionTypes,
+  commonSagaActionTypes,
+} from "../sagaActionTypes";
 
 function* workGetActors() {
   try {
@@ -63,6 +66,14 @@ function* workDeleteActor(action: any) {
   }
 }
 
+function* workGetDataForActor() {
+  try {
+    yield put({ type: commonSagaActionTypes.GET_NATIONS_SAGA });
+  } catch (err: any) {
+    toast.error(err.response.data.message);
+  }
+}
+
 export function* getActorsSaga() {
   yield takeLatest(actorSagaActionTypes.GET_ACTORS_SAGA, workGetActors);
 }
@@ -77,4 +88,11 @@ export function* updateActorSaga() {
 
 export function* deleteActorSaga() {
   yield takeLatest(actorSagaActionTypes.DELETE_ACTOR_SAGA, workDeleteActor);
+}
+
+export function* getDataForActorSaga() {
+  yield takeLatest(
+    actorSagaActionTypes.GET_DATA_FOR_ACTOR_SAGA,
+    workGetDataForActor
+  );
 }

@@ -3,7 +3,9 @@ import * as ActorSaga from "./ActorSaga";
 import * as GenreSaga from "./GenreSaga";
 import * as ImageSaga from "./ImageSaga";
 import * as MovieSaga from "./MovieSaga";
+import * as NationSaga from "./NationSaga";
 import * as PostSaga from "./PostSaga";
+import * as ReportSaga from "./ReportSaga";
 import * as RoomSaga from "./RoomSaga";
 import * as RoomTypeSaga from "./RoomTypeSaga";
 import * as ShowTimeSaga from "./ShowTimeSaga";
@@ -11,60 +13,60 @@ import * as SnackSaga from "./SnackSaga";
 import * as StaffSaga from "./StaffSaga";
 import * as TransactionSaga from "./TransactionSaga";
 import * as UserSaga from "./UserSaga";
-import * as ReportSaga from "./ReportSaga";
 
 export default function* rootSaga() {
   yield all([
-    //User
+    // User
     UserSaga.loginSaga(),
     UserSaga.resetPasswordSaga(),
     UserSaga.changePasswordSaga(),
     UserSaga.updateUserSaga(),
-    //Movie
+    // Movie
     MovieSaga.getMoviesSaga(),
     MovieSaga.addMovieSaga(),
     MovieSaga.updateMovieSaga(),
     MovieSaga.deleteMovieSaga(),
     MovieSaga.getDataForMovieSaga(),
-    //Genre
+    // Genre
     GenreSaga.getGenresSaga(),
     GenreSaga.addGenreSaga(),
     GenreSaga.updateGenreSaga(),
     GenreSaga.deleteGenreSaga(),
-    //Snacks
+    // Snacks
     SnackSaga.getSnacksSaga(),
     SnackSaga.addSnackSaga(),
     SnackSaga.updateSnackSaga(),
     SnackSaga.deleteSnackSaga(),
-    //Snacks
+    // Snacks
     ActorSaga.getActorsSaga(),
     ActorSaga.addActorSaga(),
     ActorSaga.updateActorSaga(),
     ActorSaga.deleteActorSaga(),
-    //RoomTypes
+    ActorSaga.getDataForActorSaga(),
+    // RoomTypes
     RoomTypeSaga.getRoomTypesSaga(),
     RoomTypeSaga.addRoomTypeSaga(),
     RoomTypeSaga.updateRoomTypeSaga(),
     RoomTypeSaga.deleteRoomTypeSaga(),
-    //Staffs
+    // Staffs
     StaffSaga.getStaffsSaga(),
     StaffSaga.addStaffSaga(),
     StaffSaga.updateStaffSaga(),
     StaffSaga.deleteStaffSaga(),
-    //Posts
+    // Posts
     PostSaga.getAllPostsSaga(),
     PostSaga.getMyPostsSaga(),
     PostSaga.addPostSaga(),
     PostSaga.updatePostSaga(),
     PostSaga.deletePostSaga(),
-    //Room
+    // Room
     RoomSaga.getRoomsSaga(),
     RoomSaga.getRoomByIdSaga(),
     RoomSaga.addRoomSaga(),
     RoomSaga.updateRoomSaga(),
     RoomSaga.deleteRoomSaga(),
     RoomSaga.getDataForRoomSaga(),
-    //Show time
+    // Show time
     ShowTimeSaga.getShowTimesByDateSaga(),
     ShowTimeSaga.addShowTimeSaga(),
     ShowTimeSaga.updateShowTimeSaga(),
@@ -76,7 +78,9 @@ export default function* rootSaga() {
     TransactionSaga.addTransactionSaga(),
     // Report
     ReportSaga.getDashboardSaga(),
-    //Image
+    // Image
     ImageSaga.postImageSaga(),
+    // Nation
+    NationSaga.getNationsSaga(),
   ]);
 }

@@ -3,6 +3,7 @@ import BookingReducer from "./BookingReducer";
 import GenreReducer from "./GenreReducer";
 import LoadingReducer from "./LoadingReducer";
 import MovieReducer from "./MovieReducer";
+import NationReducer from "./NationReducer";
 import PostReducer from "./PostReducer";
 import ReportReducer from "./ReportReducer";
 import RoomReducer from "./RoomReducer";
@@ -28,6 +29,7 @@ const rootReducer = {
   booking: BookingReducer,
   transaction: TransactionReducer,
   report: ReportReducer,
+  nation: NationReducer,
 };
 
 export default rootReducer;
