@@ -1,5 +1,6 @@
 import { Card, Chip, Container, Stack, Typography } from "@mui/material";
 import { GridRowParams } from "@mui/x-data-grid";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import ActionsMenu from "~/components/ActionsMenu";
 import Table from "~/components/Table";
@@ -13,12 +14,24 @@ import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
 
 const columns = [
   {
-    field: "id",
-    headerName: "ID",
+    field: "createdAt",
+    headerName: "Thời gian tạo",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
-    minWidth: 120,
+    minWidth: 130,
+    renderCell: (params: GridRowParams<ITransaction>) => {
+      const { row } = params;
+      return (
+        <Typography
+          noWrap
+          textAlign="start"
+          sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+        >
+          {dayjs(row.createdAt).toNow()}
+        </Typography>
+      );
+    },
   },
   {
     field: "name",
@@ -46,7 +59,7 @@ const columns = [
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
-    minWidth: 200,
+    minWidth: 130,
     renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
 
@@ -85,7 +98,7 @@ const columns = [
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
-    minWidth: 180,
+    minWidth: 200,
     renderCell: (params: GridRowParams<ITransaction>) => {
       const { row } = params;
       return (
@@ -94,7 +107,7 @@ const columns = [
           textAlign="start"
           sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
         >
-          {row.showTime.movie}
+          {row.showTime.movieName}
         </Typography>
       );
     },

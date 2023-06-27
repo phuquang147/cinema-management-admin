@@ -78,6 +78,11 @@ export default function* rootSaga() {
     TransactionSaga.addTransactionSaga(),
     // Report
     ReportSaga.getDashboardSaga(),
+    ReportSaga.getDailyReportSaga(),
+    ReportSaga.getMonthlyReportSaga(),
+    ReportSaga.getYearlyReportSaga(),
+    ReportSaga.getMovieReportSaga(),
+    ReportSaga.getMovieReportByDateSaga(),
     // Image
     ImageSaga.postImageSaga(),
     // Nation

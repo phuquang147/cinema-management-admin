@@ -12,7 +12,7 @@ export default interface ITransaction {
     quantity: number;
   }[];
   showTime: {
-    movie: string;
+    movieName: string;
     startTime: string;
   };
   staff?: {

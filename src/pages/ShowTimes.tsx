@@ -175,7 +175,7 @@ const ShowTimes: React.FC = () => {
 
   return (
     <AuthorizeContainer staffCanView={false}>
-      <Container>
+      <Container sx={{ pb: 4 }}>
         <Stack
           direction="row"
           alignItems="center"

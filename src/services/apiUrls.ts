@@ -82,6 +82,11 @@ export const URL_ADD_TRANSACTION = `${DOMAIN_NAME}/transactions`;
 
 // REPORTS
 export const URL_GET_DASHBOARD = `${DOMAIN_NAME}/dashboard`;
+export const URL_GET_DAILY_REPORT = `${DOMAIN_NAME}/daily-report`;
+export const URL_GET_MONTHLY_REPORT = `${DOMAIN_NAME}/monthly-report`;
+export const URL_GET_YEARLY_REPORT = `${DOMAIN_NAME}/annual-report`;
+export const URL_GET_MOVIE_REPORT = (movie: string) =>
+  `${DOMAIN_NAME}/reports/${movie}`;
 
 // NATIONS
 export const URL_GET_NATIONS = `${DOMAIN_NAME}/nations`;

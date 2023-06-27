@@ -1,7 +1,19 @@
-import { Avatar, Box, Stack } from "@mui/material";
-import { FC } from "react";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import { GridRowParams } from "@mui/x-data-grid";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
+import { FC, useEffect } from "react";
 import DonutChart from "~/components/Chart/DonutChart";
+import Iconify from "~/components/Iconify";
 import Table from "~/components/Table";
+import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import {
+  GeneralItemReport,
+  GeneralMovieReport,
+} from "~/redux/reducers/ReportReducer";
+import { reportSagaActionTypes } from "~/redux/sagaActionTypes";
+import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
+import NoData from "../Nodata";
 
 const movieColumns = [
   {
@@ -12,9 +24,9 @@ const movieColumns = [
     align: "center",
     minWidth: 50,
     sortable: false,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams<GeneralMovieReport>) => {
       const { row } = params;
-      return <Avatar />;
+      return <Avatar src={row.thumbnail} />;
     },
   },
   {
@@ -24,52 +36,40 @@ const movieColumns = [
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    // renderCell: (params: any) => {
-    //   const { row } = params;
-    //   return (
-    //     <Typography
-    //       noWrap
-    //       textAlign="start"
-    //       sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-    //     >
-    //       {row.staff ? row.staff.name : row.customer?.name}
-    //     </Typography>
-    //   );
-    // },
+    renderCell: (params: GridRowParams<GeneralMovieReport>) => {
+      const { row } = params;
+      return (
+        <Typography
+          noWrap
+          textAlign="start"
+          sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+        >
+          {row.name}
+        </Typography>
+      );
+    },
   },
-
   {
-    field: "soldTickets",
+    field: "soldTicketQuantity",
     headerName: "Số lượng vé",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 180,
-    // renderCell: (params: GridRowParams<ITransaction>) => {
-    //   const { row } = params;
-    //   return (
-    //     <Typography
-    //       noWrap
-    //       textAlign="start"
-    //       sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-    //     >
-    //       {row.showTime.movie}
-    //     </Typography>
-    //   );
-    // },
   },
-
   {
-    field: "totalRevenue",
-    headerName: "Danh thu",
+    field: "ticketRevenue",
+    headerName: "Doanh thu",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 170,
-    // renderCell: (params: GridRowParams<ITransaction>) => {
-    //   const { row } = params;
-    //   return <Typography>{ISOToDateTimeFormat(row.createdAt)}</Typography>;
-    // },
+    renderCell: (params: GridRowParams<GeneralMovieReport>) => {
+      const { row } = params;
+      return (
+        <Typography>{printNumberWithCommas(row.ticketRevenue)} VNĐ</Typography>
+      );
+    },
   },
 ];
 
@@ -82,9 +82,9 @@ const snackColumns = [
     align: "center",
     minWidth: 50,
     sortable: false,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRowParams<GeneralItemReport>) => {
       const { row } = params;
-      return <Avatar />;
+      return <Avatar src={row.image} />;
     },
   },
   {
@@ -94,84 +94,32 @@ const snackColumns = [
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    // renderCell: (params: any) => {
-    //   const { row } = params;
-    //   return (
-    //     <Typography
-    //       noWrap
-    //       textAlign="start"
-    //       sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-    //     >
-    //       {row.staff ? row.staff.name : row.customer?.name}
-    //     </Typography>
-    //   );
-    // },
   },
   {
-    field: "sold",
+    field: "quantity",
     headerName: "Số lượng",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 180,
-    // renderCell: (params: GridRowParams<ITransaction>) => {
-    //   const { row } = params;
-    //   return (
-    //     <Typography
-    //       noWrap
-    //       textAlign="start"
-    //       sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-    //     >
-    //       {row.showTime.movie}
-    //     </Typography>
-    //   );
-    // },
+    renderCell: (params: GridRowParams<GeneralItemReport>) => {
+      const { row } = params;
+      return <Typography>{printNumberWithCommas(row.quantity)}</Typography>;
+    },
   },
   {
     field: "totalRevenue",
-    headerName: "Danh thu",
+    headerName: "Doanh thu",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 170,
-    // renderCell: (params: GridRowParams<ITransaction>) => {
-    //   const { row } = params;
-    //   return <Typography>{ISOToDateTimeFormat(row.createdAt)}</Typography>;
-    // },
-  },
-];
-
-const movieData = [
-  {
-    id: "1babdasdas",
-    name: "Fast And Furious",
-    soldTickets: 10,
-    unsoldTickets: 20,
-    totalRevenue: 100000,
-  },
-  {
-    id: "1babdasddssdas",
-    name: "Fast And Furious",
-    soldTickets: 10,
-    unsoldTickets: 20,
-    totalRevenue: 100000,
-  },
-];
-
-const snackData = [
-  {
-    id: "1babdasdas",
-    name: "Fast And Furious",
-    sold: 10,
-    unsoldTickets: 20,
-    totalRevenue: 100000,
-  },
-  {
-    id: "1babdasddssdas",
-    name: "Fast And Furious",
-    sold: 10,
-    unsoldTickets: 20,
-    totalRevenue: 100000,
+    renderCell: (params: GridRowParams<GeneralItemReport>) => {
+      const { row } = params;
+      return (
+        <Typography>{printNumberWithCommas(row.totalPrice)} VNĐ</Typography>
+      );
+    },
   },
 ];
 
@@ -180,6 +128,180 @@ type ReportByDateProps = {
 };
 
 const ReportByDate: FC<ReportByDateProps> = ({ view }) => {
+  const dispatch = useAppDispatch();
+  const { dailyReport } = useAppSelector((state) => state.report);
+
+  useEffect(() => {
+    dispatch({
+      type: reportSagaActionTypes.GET_DAILY_REPORT_SAGA,
+      payload: { date: new Date().toISOString() },
+    });
+  }, [dispatch]);
+
+  const handleExportMoviesReport = async () => {
+    if (dailyReport) {
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Báo cáo");
+
+      sheet.columns = [
+        {
+          header: "Tên phim",
+          key: "name",
+          width: 50,
+          style: { alignment: { horizontal: "left" } },
+        },
+        {
+          header: "Số lượng vé",
+          key: "soldTicketQuantity",
+          width: 20,
+          style: { alignment: { horizontal: "center" } },
+        },
+        {
+          header: "Doanh thu",
+          key: "ticketRevenue",
+          width: 20,
+          style: { alignment: { horizontal: "center" } },
+        },
+      ];
+
+      sheet.getRow(1).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFa5d8ff" },
+      };
+
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+
+      for (let movie of dailyReport?.movies) {
+        const { name, soldTicketQuantity, ticketRevenue } = movie;
+
+        sheet.addRow({
+          name,
+          soldTicketQuantity,
+          ticketRevenue: `${printNumberWithCommas(ticketRevenue)} VNĐ`,
+        });
+      }
+
+      sheet.insertRow(1, {
+        name: `Báo cáo chung ngày ${dailyReport.date.slice(0, 10)}`,
+      });
+
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+
+      sheet.eachRow({ includeEmpty: true }, function (row) {
+        row.border = {
+          bottom: { style: "thin" },
+        };
+        row.height = 40;
+        row.alignment = { vertical: "middle" };
+      });
+
+      sheet.mergeCells(1, 1, 1, 3);
+      sheet.getCell("A1").alignment = {
+        horizontal: "center",
+        vertical: "middle",
+      };
+
+      sheet.insertRow(dailyReport.movies.length + 3, {
+        soldTicketQuantity: "Tổng doanh thu",
+        ticketRevenue:
+          printNumberWithCommas(dailyReport.totalMovieRevenue) + " VNĐ",
+      });
+
+      const buf = await workbook.xlsx.writeBuffer();
+      saveAs(
+        new Blob([buf]),
+        `Báo cáo chung ngày ${dailyReport.date.slice(0, 10)}.xlsx`
+      );
+    }
+  };
+
+  const handleExportItemsReport = async () => {
+    if (dailyReport) {
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Báo cáo");
+
+      sheet.columns = [
+        {
+          header: "Tên món",
+          key: "name",
+          width: 50,
+          style: { alignment: { horizontal: "left" } },
+        },
+        {
+          header: "Số lượng",
+          key: "quantity",
+          width: 20,
+          style: { alignment: { horizontal: "center" } },
+        },
+        {
+          header: "Doanh thu",
+          key: "totalPrice",
+          width: 20,
+          style: { alignment: { horizontal: "center" } },
+        },
+      ];
+
+      sheet.getRow(1).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFa5d8ff" },
+      };
+
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+
+      for (let item of dailyReport?.items) {
+        const { name, quantity, totalPrice } = item;
+
+        sheet.addRow({
+          name,
+          quantity: `${printNumberWithCommas(quantity)}`,
+          totalPrice: `${printNumberWithCommas(totalPrice)} VNĐ`,
+        });
+      }
+
+      sheet.insertRow(1, {
+        name: `Báo cáo chung ngày ${dailyReport.date.slice(0, 10)}`,
+      });
+
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+
+      sheet.eachRow({ includeEmpty: true }, function (row) {
+        row.border = {
+          bottom: { style: "thin" },
+        };
+        row.height = 40;
+        row.alignment = { vertical: "middle" };
+      });
+
+      sheet.mergeCells(1, 1, 1, 3);
+      sheet.getCell("A1").alignment = {
+        horizontal: "center",
+        vertical: "middle",
+      };
+
+      sheet.insertRow(dailyReport.items.length + 3, {
+        quantity: "Tổng doanh thu",
+        totalPrice:
+          printNumberWithCommas(dailyReport.totalItemRevenue) + " VNĐ",
+      });
+
+      const buf = await workbook.xlsx.writeBuffer();
+      saveAs(
+        new Blob([buf]),
+        `Báo cáo chung ngày ${dailyReport.date.slice(0, 10)}.xlsx`
+      );
+    }
+  };
+
   return (
     <Stack gap={2}>
       {view === "list" && (
@@ -194,7 +316,19 @@ const ReportByDate: FC<ReportByDateProps> = ({ view }) => {
               },
             }}
           >
-            <Table rows={movieData} columns={movieColumns} />
+            {dailyReport ? (
+              <Stack direction="column" alignItems="end" gap={2}>
+                <Box height={500} width="100%">
+                  <Table rows={dailyReport?.movies} columns={movieColumns} />
+                </Box>
+                <Button variant="contained" onClick={handleExportMoviesReport}>
+                  <Iconify icon="file-icons:microsoft-excel" sx={{ mr: 1 }} />
+                  Xuất Excel
+                </Button>
+              </Stack>
+            ) : (
+              <NoData />
+            )}
           </Box>
 
           <Box
@@ -207,99 +341,30 @@ const ReportByDate: FC<ReportByDateProps> = ({ view }) => {
               },
             }}
           >
-            <Table rows={snackData} columns={snackColumns} />
+            {dailyReport ? (
+              <Stack direction="column" alignItems="end" gap={2}>
+                <Box height={500} width="100%">
+                  <Table rows={dailyReport?.items} columns={snackColumns} />
+                </Box>
+                <Button variant="contained" onClick={handleExportItemsReport}>
+                  <Iconify icon="file-icons:microsoft-excel" sx={{ mr: 1 }} />
+                  Xuất Excel
+                </Button>
+              </Stack>
+            ) : (
+              <NoData />
+            )}
           </Box>
         </Stack>
       )}
       {view === "chart" && (
         <DonutChart
-          series={[44, 55]}
+          series={[
+            dailyReport ? dailyReport?.totalMovieRevenue : 0,
+            dailyReport ? dailyReport?.totalItemRevenue : 0,
+          ]}
           options={{ labels: ["Vé", "Bắp nước"] }}
         />
-        // <Stack>
-        //   <ReactApexChart
-        //     options={{
-        //       chart: {
-        //         height: 350,
-        //         type: "area",
-        //       },
-        //       dataLabels: {
-        //         enabled: false,
-        //       },
-        //       stroke: {
-        //         curve: "smooth",
-        //       },
-        //       xaxis: {
-        //         type: "datetime",
-        //         categories: [
-        //           "2018-09-19T00:00:00.000Z",
-        //           "2018-09-19T01:30:00.000Z",
-        //           "2018-09-19T02:30:00.000Z",
-        //           "2018-09-19T03:30:00.000Z",
-        //           "2018-09-19T04:30:00.000Z",
-        //           "2018-09-19T05:30:00.000Z",
-        //           "2018-09-19T06:30:00.000Z",
-        //         ],
-        //       },
-        //       tooltip: {
-        //         x: {
-        //           format: "dd/MM/yy HH:mm",
-        //         },
-        //       },
-        //     }}
-        //     series={[
-        //       {
-        //         name: "Vé đã bán",
-        //         data: [31, 40, 28, 51, 42, 109, 100],
-        //       },
-        //       {
-        //         name: "Vé còn lại",
-        //         data: [11, 32, 45, 32, 34, 52, 41],
-        //       },
-        //     ]}
-        //     type="area"
-        //     height={350}
-        //   />
-        //   <ReactApexChart
-        //     options={{
-        //       chart: {
-        //         height: 350,
-        //         type: "area",
-        //       },
-        //       dataLabels: {
-        //         enabled: false,
-        //       },
-        //       stroke: {
-        //         curve: "smooth",
-        //       },
-        //       xaxis: {
-        //         type: "datetime",
-        //         categories: [
-        //           "2018-09-19T00:00:00.000Z",
-        //           "2018-09-19T01:30:00.000Z",
-        //           "2018-09-19T02:30:00.000Z",
-        //           "2018-09-19T03:30:00.000Z",
-        //           "2018-09-19T04:30:00.000Z",
-        //           "2018-09-19T05:30:00.000Z",
-        //           "2018-09-19T06:30:00.000Z",
-        //         ],
-        //       },
-        //       tooltip: {
-        //         x: {
-        //           format: "dd/MM/yy HH:mm",
-        //         },
-        //       },
-        //     }}
-        //     series={[
-        //       {
-        //         name: "Doanh thu",
-        //         data: [31, 40, 28, 51, 42, 109, 100],
-        //       },
-        //     ]}
-        //     type="area"
-        //     height={350}
-        //   />
-        // </Stack>
       )}
     </Stack>
   );

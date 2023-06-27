@@ -120,7 +120,6 @@ const ShowTimeForm: React.FC<ShowTimeFormProps> = ({
       payload: { id: showTime?._id, handleCloseModal },
     });
   };
-  console.log(showTime);
 
   return (
     <Box>

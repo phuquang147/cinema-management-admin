@@ -64,8 +64,6 @@ const PostForm: React.FC<PostFormProps> = ({ type = "new" }) => {
   } = methods;
 
   const onSubmit = async (values: PostFormData) => {
-    console.log(values);
-
     if (type === "new") {
       dispatch({
         type: postSagaActionTypes.ADD_POST_SAGA,

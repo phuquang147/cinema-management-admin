@@ -2,15 +2,13 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { GridRowParams } from "@mui/x-data-grid";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import LineChart from "~/components/Chart/LineChart";
 import Iconify from "~/components/Iconify";
 import Table from "~/components/Table";
-import { useAppDispatch, useAppSelector } from "~/redux/hooks";
-import { GeneralDateInMonthReport } from "~/redux/reducers/ReportReducer";
-import { reportSagaActionTypes } from "~/redux/sagaActionTypes";
+import { useAppSelector } from "~/redux/hooks";
+import { MovieReport } from "~/redux/reducers/ReportReducer";
 import { printNumberWithCommas } from "~/utils/printNumerWithCommas";
-import NoData from "../Nodata";
 
 const columns = [
   {
@@ -20,48 +18,45 @@ const columns = [
     headerAlign: "left",
     align: "left",
     minWidth: 200,
-    renderCell: (params: GridRowParams<GeneralDateInMonthReport>) => {
-      const { row } = params;
-      return <Typography>{row.date.slice(0, 10)}</Typography>;
-    },
   },
   {
-    field: "ticketRevenue",
-    headerName: "Danh thu vé",
+    field: "soldTicketQuantity",
+    headerName: "Số vé đã bán",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 180,
-    renderCell: (params: GridRowParams<GeneralDateInMonthReport>) => {
+    renderCell: (params: GridRowParams<MovieReport>) => {
       const { row } = params;
       return (
-        <Typography>{printNumberWithCommas(row.ticketRevenue)} VNĐ</Typography>
+        <Typography>{printNumberWithCommas(row.soldTicketQuantity)}</Typography>
       );
     },
   },
-
   {
-    field: "itemRevenue",
-    headerName: "Danh thu bắp nước",
+    field: "remainingTicketQuantity",
+    headerName: "Số vé còn lại",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 170,
-    renderCell: (params: GridRowParams<GeneralDateInMonthReport>) => {
+    renderCell: (params: GridRowParams<MovieReport>) => {
       const { row } = params;
       return (
-        <Typography>{printNumberWithCommas(row.itemRevenue)} VNĐ</Typography>
+        <Typography>
+          {printNumberWithCommas(row.remainingTicketQuantity)}
+        </Typography>
       );
     },
   },
   {
     field: "totalRevenue",
-    headerName: "Tổng doanh thu",
+    headerName: "Doanh thu",
     headerClassName: "super-app-theme--header",
     headerAlign: "left",
     align: "left",
     minWidth: 170,
-    renderCell: (params: GridRowParams<GeneralDateInMonthReport>) => {
+    renderCell: (params: GridRowParams<MovieReport>) => {
       const { row } = params;
       return (
         <Typography>{printNumberWithCommas(row.totalRevenue)} VNĐ</Typography>
@@ -70,25 +65,15 @@ const columns = [
   },
 ];
 
-type ReportByMonthProps = {
+type ReportAllProps = {
   view: "list" | "chart";
 };
 
-const ReportByMonth: FC<ReportByMonthProps> = ({ view }) => {
-  const dispatch = useAppDispatch();
-  const { monthlyReport } = useAppSelector((state) => state.report);
+const ReportAll: FC<ReportAllProps> = ({ view }) => {
+  const { movieReport } = useAppSelector((state) => state.report);
 
-  useEffect(() => {
-    dispatch({
-      type: reportSagaActionTypes.GET_MONTHLY_REPORT_SAGA,
-      payload: {
-        data: { month: new Date().getMonth(), year: new Date().getFullYear() },
-      },
-    });
-  }, [dispatch]);
-
-  const handleExportMonthReport = async () => {
-    if (monthlyReport) {
+  const handleExportMovieReport = async () => {
+    if (movieReport) {
       const workbook = new ExcelJS.Workbook();
       const sheet = workbook.addWorksheet("Báo cáo");
 
@@ -96,25 +81,25 @@ const ReportByMonth: FC<ReportByMonthProps> = ({ view }) => {
         {
           header: "Ngày",
           key: "date",
-          width: 50,
+          width: 30,
           style: { alignment: { horizontal: "left" } },
         },
         {
-          header: "Doanh thu vé",
-          key: "ticketRevenue",
-          width: 20,
+          header: "Số vẽ đã bán",
+          key: "soldTicketQuantity",
+          width: 30,
           style: { alignment: { horizontal: "center" } },
         },
         {
-          header: "Doanh thu bắp nước",
-          key: "itemRevenue",
-          width: 20,
+          header: "Số vé còn lại",
+          key: "remainingTicketQuantity",
+          width: 30,
           style: { alignment: { horizontal: "center" } },
         },
         {
           header: "Tổng doanh thu",
           key: "totalRevenue",
-          width: 20,
+          width: 30,
           style: { alignment: { horizontal: "center" } },
         },
       ];
@@ -129,19 +114,24 @@ const ReportByMonth: FC<ReportByMonthProps> = ({ view }) => {
         bold: true,
       };
 
-      for (let movie of monthlyReport?.data) {
-        const { date, itemRevenue, ticketRevenue, totalRevenue } = movie;
+      for (let movie of movieReport.data) {
+        const { soldTicketQuantity, remainingTicketQuantity, totalRevenue } =
+          movie;
+
+        const { date } = movie;
 
         sheet.addRow({
-          date: date.slice(0, 10),
-          ticketRevenue: `${printNumberWithCommas(ticketRevenue)} VNĐ`,
-          itemRevenue: `${printNumberWithCommas(itemRevenue)} VNĐ`,
+          date,
+          soldTicketQuantity: `${printNumberWithCommas(soldTicketQuantity)}`,
+          remainingTicketQuantity: `${printNumberWithCommas(
+            remainingTicketQuantity
+          )}`,
           totalRevenue: `${printNumberWithCommas(totalRevenue)} VNĐ`,
         });
       }
 
       sheet.insertRow(1, {
-        name: `Báo cáo tháng ${monthlyReport.month} năm ${monthlyReport.year}`,
+        name: `Báo cáo phim`,
       });
 
       sheet.getRow(1).font = {
@@ -162,17 +152,14 @@ const ReportByMonth: FC<ReportByMonthProps> = ({ view }) => {
         vertical: "middle",
       };
 
-      // sheet.insertRow(monthlyReport.movies.length + 3, {
+      // sheet.insertRow(yearlyReport.movies.length + 3, {
       //   soldTicketQuantity: "Tổng doanh thu",
       //   ticketRevenue:
       //     printNumberWithCommas(dailyReport.totalMovieRevenue) + " VNĐ",
       // });
 
       const buf = await workbook.xlsx.writeBuffer();
-      saveAs(
-        new Blob([buf]),
-        `Báo cá tháng ${monthlyReport.month} năm ${monthlyReport.year}.xlsx`
-      );
+      saveAs(new Blob([buf]), `Báo cáo phim.xlsx`);
     }
   };
 
@@ -189,47 +176,55 @@ const ReportByMonth: FC<ReportByMonthProps> = ({ view }) => {
             },
           }}
         >
-          {monthlyReport ? (
-            <Stack direction="column" alignItems="end" gap={2}>
-              <Box height={500} width="100%">
-                <Table rows={monthlyReport.data} columns={columns} />
-              </Box>
-              <Button variant="contained" onClick={handleExportMonthReport}>
-                <Iconify icon="file-icons:microsoft-excel" sx={{ mr: 1 }} />
-                Xuất Excel
-              </Button>
-            </Stack>
-          ) : (
-            <NoData />
-          )}
+          <Stack direction="column" alignItems="end" gap={2}>
+            <Box height={500} width="100%">
+              <Table rows={movieReport?.data || []} columns={columns} />
+            </Box>
+            <Button variant="contained" onClick={handleExportMovieReport}>
+              <Iconify icon="file-icons:microsoft-excel" sx={{ mr: 1 }} />
+              Xuất Excel
+            </Button>
+          </Stack>
         </Box>
       )}
       {view === "chart" && (
-        <Stack>
+        <Stack gap={10}>
           <LineChart
             options={{
               xaxis: {
-                type: "datetime",
-                categories: monthlyReport?.data.map((report) => report.date),
-              },
-              tooltip: {
-                x: {
-                  format: "dd/MM/yyyy",
-                },
+                type: "category",
+                categories: movieReport?.data.map((report) => report.date),
               },
             }}
             series={[
               {
-                name: "Vé",
-                data: monthlyReport?.data.map(
-                  (report) => report.ticketRevenue
-                ) as number[],
+                name: "Vé đã bán",
+                data:
+                  movieReport?.data.map(
+                    (report) => report.soldTicketQuantity
+                  ) || [],
               },
               {
-                name: "Bắp nước",
-                data: monthlyReport?.data.map(
-                  (report) => report.itemRevenue
-                ) as number[],
+                name: "Vé còn lại",
+                data:
+                  movieReport?.data.map(
+                    (report) => report.remainingTicketQuantity
+                  ) || [],
+              },
+            ]}
+          />
+          <LineChart
+            options={{
+              xaxis: {
+                type: "category",
+                categories: movieReport?.data.map((report) => report.date),
+              },
+            }}
+            series={[
+              {
+                name: "Doanh thu",
+                data:
+                  movieReport?.data.map((report) => report.totalRevenue) || [],
               },
             ]}
           />
@@ -239,4 +234,4 @@ const ReportByMonth: FC<ReportByMonthProps> = ({ view }) => {
   );
 };
 
-export default ReportByMonth;
+export default ReportAll;

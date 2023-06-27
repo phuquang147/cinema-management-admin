@@ -59,8 +59,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   };
 
   const handleUpdateGallery = (filePath: string) => {
-    console.log([...gallery, filePath]);
-
     handleChangeGallery([...gallery, filePath]);
   };
 

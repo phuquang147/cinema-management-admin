@@ -79,12 +79,6 @@ const ProfileForm: React.FC = () => {
   }, [user]);
 
   const onSubmit = async (values: ProfileFormData) => {
-    console.log({
-      ...values,
-      birthday: new Date(values.birthday).toISOString(),
-      id: user ? user._id : "",
-    });
-
     dispatch({
       type: authSagaActionTypes.UPDATE_USER_SAGA,
       payload: {

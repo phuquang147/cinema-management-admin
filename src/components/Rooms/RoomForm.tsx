@@ -66,8 +66,6 @@ const RoomForm: React.FC<RoomFormProps> = ({ type = "new", room }) => {
   } = methods;
 
   const onSubmit = async (values: any) => {
-    console.log(seats);
-
     if (type === "new") {
       dispatch({
         type: roomSagaActionTypes.ADD_ROOM_SAGA,

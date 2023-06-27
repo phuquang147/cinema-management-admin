@@ -89,7 +89,7 @@ const TransactionDetail: React.FC<TransactionDetailProps> = ({
         </Grid>
         <Grid item xs={12} md={9}>
           <Typography>
-            {transaction ? transaction.showTime.movie : ""}
+            {transaction ? transaction.showTime.movieName : ""}
           </Typography>
         </Grid>
         <Grid item xs={12} md={3}>

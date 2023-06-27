@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  Button,
   Stack,
   TextField,
   ToggleButton,
@@ -10,6 +9,8 @@ import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { FC, KeyboardEvent, useState } from "react";
 import Iconify from "~/components/Iconify";
+import { useAppDispatch } from "~/redux/hooks";
+import { reportSagaActionTypes } from "~/redux/sagaActionTypes";
 import ReportByDate from "./ReportByDate";
 import ReportByMonth from "./ReportByMonth";
 import ReportByYear from "./ReportByYear";
@@ -29,7 +30,30 @@ const TIME_TYPES = [
   },
 ];
 
+const getInputFormat = (timeType: string) => {
+  switch (timeType) {
+    case "month":
+      return "MM/YYYY";
+    case "year":
+      return "YYYY";
+    default:
+      return "DD/MM/YYYY";
+  }
+};
+
+const getViews = (timeType: string) => {
+  switch (timeType) {
+    case "month":
+      return ["month", "year"];
+    case "year":
+      return ["year"];
+    default:
+      return ["day", "month"] as any;
+  }
+};
+
 const GeneralReport: FC = () => {
+  const dispatch = useAppDispatch();
   const [time, setTime] = useState<Date | null>(new Date());
   const [view, setView] = useState<"list" | "chart">("list");
   const [timeType, setTimeType] = useState(TIME_TYPES[0]);
@@ -39,6 +63,35 @@ const GeneralReport: FC = () => {
     newView: "list" | "chart"
   ) => {
     setView(newView);
+  };
+
+  const handleChangeTime = (value: any) => {
+    setTime(value);
+
+    switch (timeType.value) {
+      case TIME_TYPES[0].value:
+        dispatch({
+          type: reportSagaActionTypes.GET_DAILY_REPORT_SAGA,
+          payload: { date: value?.$d.toISOString() },
+        });
+        break;
+      case TIME_TYPES[1].value:
+        dispatch({
+          type: reportSagaActionTypes.GET_MONTHLY_REPORT_SAGA,
+          payload: {
+            data: {
+              month: value?.$d.getMonth(),
+              year: value?.$d.getFullYear(),
+            },
+          },
+        });
+        break;
+      default:
+        dispatch({
+          type: reportSagaActionTypes.GET_YEARLY_REPORT_SAGA,
+          payload: { year: value?.$y },
+        });
+    }
   };
 
   return (
@@ -52,15 +105,16 @@ const GeneralReport: FC = () => {
           disableClearable
           value={timeType}
           onChange={(_, value) => setTimeType(value)}
+          getOptionLabel={(option) => option.label}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           size="small"
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DesktopDatePicker
-            inputFormat="DD/MM/YYYY"
+            inputFormat={getInputFormat(timeType.value)}
+            views={getViews(timeType.value)}
             value={time}
-            onChange={(value) => {
-              setTime(value);
-            }}
+            onChange={handleChangeTime}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -72,10 +126,6 @@ const GeneralReport: FC = () => {
             )}
           />
         </LocalizationProvider>
-        <Button variant="contained">
-          <Iconify icon="file-icons:microsoft-excel" sx={{ mr: 1 }} />
-          Xuất Excel
-        </Button>
       </Stack>
       <Stack direction="row" justifyContent="end" mb={2}>
         <ToggleButtonGroup value={view} exclusive onChange={handleChangeView}>

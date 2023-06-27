@@ -34,8 +34,6 @@ const AuthServices = {
     });
   },
   updateUser: (data: ProfileFormData) => {
-    console.log(data);
-
     return Axios({
       url: URL_UPDATE_USER(data.id),
       method: "PUT",
