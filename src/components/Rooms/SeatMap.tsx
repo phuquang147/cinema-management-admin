@@ -176,12 +176,12 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, onUpdateSeats }) => {
     <Stack
       direction="column"
       gap={1}
-      sx={{ position: "relative", overflow: "auto" }}
+      sx={{ width: "auto", position: "relative", overflow: "auto" }}
       className="seats-container"
     >
       <Box
         sx={{
-          width: "100%",
+          width: "auto",
           bgcolor: "#777",
           textAlign: "center",
           borderRadius: "4px",
@@ -232,8 +232,56 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, onUpdateSeats }) => {
             mouseDownEvent.current = { clientX: e.clientX, clientY: e.clientY };
           }}
         >
+          {seats[0] && (
+            <Stack direction="row">
+              <Box
+                sx={{
+                  height: "36px",
+                  width: "36px",
+                  borderRadius: "4px",
+                  margin: "4px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              ></Box>
+              {seats[0].map((value, index) => {
+                return (
+                  <Box
+                    key={`${Math.random()}${index}`}
+                    sx={{
+                      height: "36px",
+                      width: "36px",
+                      borderRadius: "4px",
+                      margin: "4px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {index + 1}
+                  </Box>
+                );
+              })}
+            </Stack>
+          )}
+
           {seats.map((row, rowIndex) => (
             <Stack key={rowIndex} direction="row" sx={{ width: "fit-content" }}>
+              <Box
+                key={`${Math.random()}${rowIndex}`}
+                sx={{
+                  height: "36px",
+                  width: "36px",
+                  borderRadius: "4px",
+                  margin: "4px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {String.fromCharCode(65 + rowIndex)}
+              </Box>
               {row.map((col, colIndex) => {
                 return (
                   <Seat

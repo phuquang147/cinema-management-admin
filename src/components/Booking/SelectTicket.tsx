@@ -190,7 +190,7 @@ const SelectTicket: React.FC<SelectTicketProps> = ({
       </Stack>
       <TransformWrapper minScale={0.5}>
         <TransformComponent>
-          <Stack gap={1}>
+          <Stack gap={1} sx={{ width: "fit-content" }}>
             <Box
               sx={{
                 width: "100%",

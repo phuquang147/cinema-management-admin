@@ -7,10 +7,7 @@ export const ISOToDateTimeFormat = (ISO: string) => {
 };
 
 export const dateTimeToISO = (date: Date) => {
-  const newDate = new Date(date);
-  newDate.setHours(newDate.getHours() + 7);
-
-  return newDate.toISOString();
+  return date.toISOString();
 };
 
 export const isoToDateTime = (isoDate: string) => {

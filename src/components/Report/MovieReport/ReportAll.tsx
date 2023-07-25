@@ -131,7 +131,7 @@ const ReportAll: FC<ReportAllProps> = ({ view }) => {
       }
 
       sheet.insertRow(1, {
-        name: `Báo cáo phim`,
+        date: `Báo cáo phim "${movieReport.movie}"`,
       });
 
       sheet.getRow(1).font = {
@@ -159,7 +159,7 @@ const ReportAll: FC<ReportAllProps> = ({ view }) => {
       // });
 
       const buf = await workbook.xlsx.writeBuffer();
-      saveAs(new Blob([buf]), `Báo cáo phim.xlsx`);
+      saveAs(new Blob([buf]), `Báo cáo phim ${movieReport.movie}.xlsx`);
     }
   };
 

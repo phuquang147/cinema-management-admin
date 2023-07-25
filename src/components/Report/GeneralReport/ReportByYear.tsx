@@ -138,7 +138,7 @@ const ReportByYear: FC<ReportByYearProps> = ({ view }) => {
       }
 
       sheet.insertRow(1, {
-        name: `Báo cáo năm ${yearlyReport.year}`,
+        month: `Báo cáo năm ${yearlyReport.year}`,
       });
 
       sheet.getRow(1).font = {
